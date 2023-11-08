@@ -3,11 +3,15 @@
   --lkui-secondary-color: #2e2e2e;
   --lkui-tertiary-color: #3f3f3f;
   --lkui-light-color: #eaeaea;
+  --lkui-display-fonts: 'Typonine Sans', system-ui, sans-serif;
 }
 body {
   background-color: var(--lkui-primary-color);
   color: var(--lkui-light-color);
+  font-family: var(--lkui-display-fonts);
 }
 .lkui-header {
   background-color: #2e2e2e;
+  padding: 10px;
+  vertical-align: middle;
 }
