@@ -1,5 +1,5 @@
 import React from 'react'
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 
 interface LKUINavButtonProps {
     path: string;
@@ -10,5 +10,12 @@ function LKUINavButton({ path, regComponent, filledComponent }: LKUINavButtonPro
     const loc = useLocation()
     const isDesignatedPage = loc.pathname === path
     const IconPath = isDesignatedPage ? filledComponent : regComponent
+    return (
+        <Link to={path}>
+            <div className='lkui-nav-button'>
+                <IconPath />
+            </div>
+        </Link>
+    )
 }
 export default LKUINavButton

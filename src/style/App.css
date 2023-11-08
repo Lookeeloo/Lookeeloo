@@ -18,3 +18,9 @@ body {
 .lkui-blog-style {
   text-align: center;
 }
+.lkui-nav-button {
+  text-decoration: none;
+}
+a .lkui-nav-button {
+  text-decoration: none !important;
+}
