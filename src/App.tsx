@@ -16,7 +16,7 @@ function App() {
           <Link to='/'>
             <img src={logo} width={150}></img>
           </Link>
-          <LKUINavButton path='/about-us' regComponent={Home24Regular} filledComponent={Home24Filled} />
+          <LKUINavButton path='/' regComponent={Home24Regular} filledComponent={Home24Filled} />
         </div>
         <Switch>
           <Route exact path='/' component={Home}></Route>
