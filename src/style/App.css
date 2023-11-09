@@ -11,16 +11,24 @@ body {
   font-family: var(--lkui-display-fonts);
 }
 .lkui-header {
-  background-color: #2e2e2e;
+  background-color: var(--lkui-primary-color);
   padding: 10px;
-  vertical-align: middle;
+  display: flex;
+  align-items: center;
 }
 .lkui-blog-style {
   text-align: center;
 }
-.lkui-nav-button {
+.lkui-path-no-dec {
   text-decoration: none;
+  color: var(--lkui-light-color);
 }
-a .lkui-nav-button {
-  text-decoration: none !important;
+.lkui-nav-button {
+  display: inline-flex;
+  margin-left: 15px;
+  padding: 10px;
+  border-radius: 10px;
+}
+.lkui-nav-button:hover {
+  background-color: var(--lkui-secondary-color);
 }

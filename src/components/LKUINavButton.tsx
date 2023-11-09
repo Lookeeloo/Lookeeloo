@@ -11,7 +11,7 @@ function LKUINavButton({ path, regComponent, filledComponent }: LKUINavButtonPro
     const isDesignatedPage = loc.pathname === path
     const IconPath = isDesignatedPage ? filledComponent : regComponent
     return (
-        <Link to={path}>
+        <Link to={path} className="lkui-path-no-dec">
             <div className='lkui-nav-button'>
                 <IconPath />
             </div>
