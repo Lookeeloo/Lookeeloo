@@ -34,6 +34,10 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
 
       // Add an event listener to play the video when it has finished loading
       videoCurrent.addEventListener('loadeddata', () => {
+        const duration = videoCurrent.duration;
+        if (TimeDisplayElement.current) {
+          TimeDisplayElement.current.innerText = `00:00 / ${formatTime(duration)}`;
+        }
         setIsPaused(true);
       });
 
@@ -41,33 +45,34 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
       videoCurrent.addEventListener('timeupdate', () => {
         const currentTime = videoCurrent.currentTime;
         const duration = videoCurrent.duration;
-      
+
         // Update progress bar value
         if (ProgressBar.current) {
-          ProgressBar.current.value = (currentTime / duration) * 101;
+          ProgressBar.current.value = (currentTime / duration) * 100;
         }
-      
+
         // Update seeker input value
         if (SeekerElement.current) {
           SeekerElement.current.value = currentTime.toString();
         }
-      
+
         // Update display of current time and total duration
         if (TimeDisplayElement.current) {
           TimeDisplayElement.current.innerText = `${formatTime(currentTime)} / ${formatTime(duration)}`;
         }
       });
 
-    return () => {
-      // Remove the event listeners when the component unmounts
-      if (videoCurrent) {
-        videoCurrent.removeEventListener('loadeddata', () => {});
-        videoCurrent.removeEventListener('timeupdate', () => {});
-      }
-    };
-  }}, []);
-  
-  function handleSeek(e: React.ChangeEvent<HTMLInputElement>) {
+      return () => {
+        // Remove the event listeners when the component unmounts
+        if (videoCurrent) {
+          videoCurrent.removeEventListener('loadeddata', () => {});
+          videoCurrent.removeEventListener('timeupdate', () => {});
+        }
+      };
+    }
+  }, []);
+
+  function handleSeek(e : any) {
     const seekTime = parseFloat(e.target.value);
     setSeekValue(seekTime);
 
