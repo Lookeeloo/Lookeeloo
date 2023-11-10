@@ -1,15 +1,20 @@
-import React from 'react'
+import React from 'react';
+
 interface LKUITransparentButtonProps {
-    regComponent: React.ComponentType;
-    ref?: React.RefObject<HTMLDivElement>;
-    onClick?: () => void
+  regComponent: React.ComponentType;
+  ref?: React.RefObject<HTMLDivElement>;
+  className?: string;
+  onClick?: (() => void) | undefined;
 }
-function LKUITransparentButton({ regComponent, ref, onClick }: LKUITransparentButtonProps) {
-    const Icon = regComponent;
-    return (
-        <div className='lkui-transparent-button' ref={ref} onClick={onClick}>
-            <Icon />
-        </div>
-    )
+
+function LKUITransparentButton({ regComponent, ref, onClick, className }: LKUITransparentButtonProps) {
+  const Icon = regComponent;
+
+  return (
+    <div className={`lkui-transparent-button ${className || ''}`} ref={ref} onClick={onClick}>
+      <Icon />
+    </div>
+  );
 }
-export default LKUITransparentButton
+
+export default LKUITransparentButton;

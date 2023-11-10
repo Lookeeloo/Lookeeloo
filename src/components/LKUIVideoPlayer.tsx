@@ -1,10 +1,11 @@
 import React, { useRef, useState, useEffect } from 'react';
 import LKUITransparentButton from './LKUITransparentButton';
-import { Play24Filled, Pause24Filled, FullScreenMaximize24Filled, SpeakerMute24Filled, Speaker224Filled } from '@fluentui/react-icons';
+import { Play24Filled, Pause24Filled, FullScreenMaximize24Filled, SpeakerMute24Filled, Speaker224Filled, SkipBack1024Filled, SkipForward1024Filled } from '@fluentui/react-icons';
 
 interface VideoPlayerAPI {
   videoPath: string;
   width?: number;
+  height?: number;
 }
 
 function LKUIVideoPlayer(api: VideoPlayerAPI) {
@@ -30,6 +31,13 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
 
   useEffect(() => {
     const videoCurrent = VideoElement.current;
+
+    if (Player.current) {
+      const playerContainer = Player.current
+      const playerHeight = playerContainer.offsetHeight
+      const playerWidth = playerHeight * (16 / 9)
+      playerContainer.style.width = `${playerWidth}px`
+    }
 
     if (videoCurrent) {
       videoCurrent.autoplay = false;
@@ -130,8 +138,45 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
   if (api.width === 0 || api.width === null) {
     api.width = 800
   }
+  enum QuickSeekDirection {
+    Back10,
+    Forward10
+  }
+  function handleQuickSeek(direction: QuickSeekDirection) {
+    if (VideoElement.current) {
+      const currentTime = VideoElement.current.currentTime;
+      
+      if (currentTime !== undefined) {
+        switch (direction) {
+          case QuickSeekDirection.Back10:
+            VideoElement.current.currentTime = currentTime - 10;
+            break;
+          case QuickSeekDirection.Forward10:
+            VideoElement.current.currentTime = currentTime + 10;
+            break;
+        }
+      }
+    }
+  }
+  document.onkeydown = function(e) {
+    if (e.key === 'p' || e.key === ' ') {
+      handlePlayPause()
+    }
+    else if (e.key === 'm') {
+      handleMute()
+    }
+    else if (e.key === 'ArrowLeft') {
+      handleQuickSeek(QuickSeekDirection.Back10)
+    }
+    else if (e.key === 'ArrowRight') {
+      handleQuickSeek(QuickSeekDirection.Forward10)
+    }
+    else if (e.key === 'f') {
+      handleFullScreen()
+    }
+  }
   return (
-    <div className="lkui-video-player" ref={Player} style={{width: api.width}}>
+    <div className="lkui-video-player" ref={Player} style={{width: api.width, height: api.height}}>
       <div className="lkui-video-player-containers">
         <div className="lkui-video-player-controls">
           <div className="lkui-video-player-seekbar">
@@ -153,8 +198,10 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
           <br></br>
           <div className="lkui-video-player-button-controls">
             <div className="lkui-video-player-controls-left">
-              <LKUITransparentButton regComponent={PlayElement} onClick={handlePlayPause}></LKUITransparentButton>
-              <LKUITransparentButton regComponent={SpeakerElement} onClick={handleMute}></LKUITransparentButton>
+              <LKUITransparentButton className='lkui-play-button' regComponent={PlayElement} onClick={handlePlayPause}></LKUITransparentButton>
+              <LKUITransparentButton className="lkui-quick-seek-left" regComponent={SkipBack1024Filled} onClick={() => handleQuickSeek(QuickSeekDirection.Back10)}></LKUITransparentButton>
+              <LKUITransparentButton className="lkui-quick-seek-right" regComponent={SkipForward1024Filled} onClick={() => handleQuickSeek(QuickSeekDirection.Forward10)}></LKUITransparentButton>
+              <LKUITransparentButton className='lkui-mute-button' regComponent={SpeakerElement} onClick={handleMute}></LKUITransparentButton>
               <p className='lkui-video-player-timecode' ref={TimeDisplayElement}>00:00 / 00:00</p>
             </div>
             <div className="lkui-video-player-controls-right">
