@@ -211,11 +211,21 @@ input[type=range].volume::-moz-range-thumb {
 .lkui-video-player-controls-left {
   display: flex;
   justify-content: flex-start !important;
+  align-items: center;
 }
 .lkui-video-player-controls-right {
   display: flex;
   justify-content: flex-end !important;
 }
+.lkui-video-player-timecode {
+  font-size: 18pt;
+  margin-bottom: -13.5px;
+  margin-right: 15px;
+  font-weight: 700;
+}
 h1 {
+  margin: 0;
+}
+p {
   margin: 0;
 }
