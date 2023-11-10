@@ -3,8 +3,8 @@ import logo from '../logo.svg';
 
 function Home() {
   return (
-    <div className="lkui-App">
-      a
+    <div>
+      <h1>Recommended for you</h1>
     </div>
   );
 }
