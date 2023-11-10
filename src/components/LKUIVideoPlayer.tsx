@@ -44,7 +44,7 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
       
         // Update progress bar value
         if (ProgressBar.current) {
-          ProgressBar.current.value = (currentTime / duration) * 105;
+          ProgressBar.current.value = (currentTime / duration) * 101;
         }
       
         // Update seeker input value
