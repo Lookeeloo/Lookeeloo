@@ -223,6 +223,15 @@ input[type=range].volume::-moz-range-thumb {
   margin-right: 15px;
   font-weight: 700;
 }
+.lkui-fullscreen {
+  border-radius: 0 !important;
+}
+.lkui-fullscreen video {
+  border-radius: 0;
+}
+.lkui-fullscreen .lkui-video-player-controls {
+  border-radius: 0;
+}
 h1 {
   margin: 0;
 }

@@ -4,6 +4,7 @@ import { Play24Filled, Pause24Filled, FullScreenMaximize24Filled, SpeakerMute24F
 
 interface VideoPlayerAPI {
   videoPath: string;
+  width?: number;
 }
 
 function LKUIVideoPlayer(api: VideoPlayerAPI) {
@@ -15,6 +16,7 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
   const VideoElement = useRef<HTMLVideoElement>(null);
   const TimeDisplayElement = useRef<HTMLParagraphElement>(null)
   const ProgressBar = useRef<HTMLProgressElement>(null);
+  const Player = useRef<HTMLDivElement>(null)
   const SeekerElement = useRef<HTMLInputElement & { isSeeking?: boolean }>(null);
   const PlayElement = isPaused ? Play24Filled : Pause24Filled;
   const SpeakerElement = isMuted ? SpeakerMute24Filled : Speaker224Filled;
@@ -116,8 +118,20 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
       setIsMuted(true);
     }
   }
+  function handleFullScreen() {
+    if (document.fullscreenElement) {
+      document.exitFullscreen()
+      Player.current?.classList.remove('lkui-fullscreen')
+    } else {
+      Player.current?.requestFullscreen()
+      Player.current?.classList.add('lkui-fullscreen')
+    }
+  }
+  if (api.width === 0 || api.width === null) {
+    api.width = 800
+  }
   return (
-    <div className="lkui-video-player">
+    <div className="lkui-video-player" ref={Player} style={{width: api.width}}>
       <div className="lkui-video-player-containers">
         <div className="lkui-video-player-controls">
           <div className="lkui-video-player-seekbar">
@@ -144,7 +158,7 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
               <p className='lkui-video-player-timecode' ref={TimeDisplayElement}>00:00 / 00:00</p>
             </div>
             <div className="lkui-video-player-controls-right">
-              <LKUITransparentButton regComponent={FullScreenMaximize24Filled}></LKUITransparentButton>
+              <LKUITransparentButton regComponent={FullScreenMaximize24Filled} onClick={handleFullScreen}></LKUITransparentButton>
             </div>
           </div>
         </div>
