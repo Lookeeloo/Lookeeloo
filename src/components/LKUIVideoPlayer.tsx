@@ -17,6 +17,7 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
   const VideoElement = useRef<HTMLVideoElement>(null);
   const TimeDisplayElement = useRef<HTMLParagraphElement>(null)
   const ProgressBar = useRef<HTMLProgressElement>(null);
+  const ControlBar = useRef<HTMLDivElement>(null)
   const Player = useRef<HTMLDivElement>(null)
   const SeekerElement = useRef<HTMLInputElement & { isSeeking?: boolean }>(null);
   const PlayElement = isPaused ? Play24Filled : Pause24Filled;
@@ -134,17 +135,45 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
     }
   }
   function handleFullScreen() {
+    const playerControls = ControlBar.current!
     if (document.fullscreenElement) {
       document.exitFullscreen()
       Player.current?.classList.remove('lkui-fullscreen')
+      playerControls.style.display = 'flex'
     } else {
       Player.current?.requestFullscreen()
+      playerControls.style.display = 'none'
       Player.current?.classList.add('lkui-fullscreen')
     }
   }
   if (api.width === 0 || api.width === null) {
     api.width = 800
   }
+  var timeout : any
+
+  function handleMouseMove() {
+    const playerControls = ControlBar.current!;
+
+    if (document.fullscreenElement) {
+      // Entering fullscreen
+      if (playerControls) {
+        playerControls.style.display = 'flex';
+        clearTimeout(timeout); // Clear any existing timeout
+        timeout = setTimeout(() => {
+          if (playerControls) {
+            playerControls.style.display = 'none';
+          }
+        }, 4000);
+      }
+    } else {
+      // Exiting fullscreen
+      if (playerControls) {
+        playerControls.style.display = 'flex';
+      }
+      clearTimeout(timeout); // Clear the timeout when exiting fullscreen
+    }
+  }
+
   enum QuickSeekDirection {
     Back10,
     Forward10
@@ -183,9 +212,9 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
     }
   }
   return (
-    <div className="lkui-video-player" ref={Player} style={{width: api.width, height: api.height}}>
+    <div className="lkui-video-player" ref={Player} style={{width: api.width, height: api.height}} onMouseMove={handleMouseMove}>
       <div className="lkui-video-player-containers">
-        <div className="lkui-video-player-controls">
+        <div className="lkui-video-player-controls" ref={ControlBar}>
           <div className="lkui-video-player-seekbar">
             <progress ref={ProgressBar} className="lkui-video-progress" max={100}></progress>
             <input
