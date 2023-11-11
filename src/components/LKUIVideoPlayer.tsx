@@ -33,10 +33,17 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
     const videoCurrent = VideoElement.current;
 
     if (Player.current) {
-      const playerContainer = Player.current
-      const playerHeight = playerContainer.offsetHeight
-      const playerWidth = playerHeight * (16 / 9)
-      playerContainer.style.width = `${playerWidth}px`
+      if (api.height != null) {
+        const playerContainer = Player.current
+        const playerHeight = playerContainer.offsetHeight
+        const playerWidth = playerHeight * (16 / 9)
+        playerContainer.style.width = `${playerWidth}px`
+      } else if (api.width != null) {
+        const playerContainer = Player.current
+        const playerWidth = playerContainer.offsetWidth
+        const playerHeight = playerWidth * (16 / 9)
+        playerContainer.style.height = `${playerHeight}px`
+      }
     }
 
     if (videoCurrent) {
