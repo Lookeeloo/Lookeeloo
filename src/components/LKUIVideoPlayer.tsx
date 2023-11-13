@@ -243,14 +243,14 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
           <br></br>
           <div className="lkui-video-player-button-controls">
             <div className="lkui-video-player-controls-left">
-              <LKUITransparentButton className='lkui-play-button' regComponent={PlayElement} onClick={handlePlayPause}></LKUITransparentButton>
-              <LKUITransparentButton className="lkui-quick-seek-left" regComponent={SkipBack1024Filled} onClick={() => handleQuickSeek(QuickSeekDirection.Back10)}></LKUITransparentButton>
-              <LKUITransparentButton className="lkui-quick-seek-right" regComponent={SkipForward1024Filled} onClick={() => handleQuickSeek(QuickSeekDirection.Forward10)}></LKUITransparentButton>
-              <LKUITransparentButton className='lkui-mute-button' regComponent={SpeakerElement} onClick={handleMute}></LKUITransparentButton>
+              <LKUITransparentButton className='lkui-play-button' regComponent={PlayElement} onClick={handlePlayPause} title='Play (p)'></LKUITransparentButton>
+              <LKUITransparentButton className="lkui-quick-seek-left" regComponent={SkipBack1024Filled} onClick={() => handleQuickSeek(QuickSeekDirection.Back10)} title='Rewind 10 (<-)'></LKUITransparentButton>
+              <LKUITransparentButton className="lkui-quick-seek-right" regComponent={SkipForward1024Filled} onClick={() => handleQuickSeek(QuickSeekDirection.Forward10)} title='Forward 10 (->)'></LKUITransparentButton>
+              <LKUITransparentButton className='lkui-mute-button' regComponent={SpeakerElement} onClick={handleMute} title='Mute (m)'></LKUITransparentButton>
               <p className='lkui-video-player-timecode' ref={TimeDisplayElement}>00:00 / 00:00</p>
             </div>
             <div className="lkui-video-player-controls-right">
-              <LKUITransparentButton regComponent={FullScreenMaximize24Filled} onClick={handleFullScreen}></LKUITransparentButton>
+              <LKUITransparentButton regComponent={FullScreenMaximize24Filled} onClick={handleFullScreen} title='Fullscreen (f)'></LKUITransparentButton>
             </div>
           </div>
         </div>
