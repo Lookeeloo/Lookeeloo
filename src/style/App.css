@@ -6,22 +6,32 @@
   --lkui-theme-color: #ff0000;
   --lkui-display-fonts: 'Typonine Sans', system-ui, sans-serif;
 }
-@keyframes rotate-left {
+@keyframes rotate-left-held {
   0% {
     transform: rotate(0deg);
   }
-  50% {
+  100% {
+    transform: rotate(-45deg);
+  }
+}
+@keyframes rotate-right-held {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(45deg);
+  }
+}
+@keyframes rotate-left-idle {
+  0% {
     transform: rotate(-45deg);
   }
   100% {
     transform: rotate(0deg);
   }
 }
-@keyframes rotate-right {
+@keyframes rotate-right-idle {
   0% {
-    transform: rotate(0deg);
-  }
-  50% {
     transform: rotate(45deg);
   }
   100% {
@@ -281,10 +291,16 @@ h1 {
   margin: 0;
 }
 .lkui-quick-seek-left:active svg {
-  animation: rotate-left 0.5s ease;
+  animation: rotate-left-held 0.5s ease;
 }
 .lkui-quick-seek-right:active svg {
-  animation: rotate-right 0.5s ease;
+  animation: rotate-right-held 0.5s ease;
+}
+.lkui-quick-seek-left:active svg {
+  animation: rotate-left-idle 0.5s ease;
+}
+.lkui-quick-seek-right:active svg {
+  animation: rotate-right-idle 0.5s ease;
 }
 .lkui-play-button:active svg {
   animation: play-scale 0.5s ease;
