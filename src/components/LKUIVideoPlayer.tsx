@@ -204,6 +204,8 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
     }
   }
   document.onkeydown = function(e) {
+    handleMouseMove()
+    e.preventDefault()
     if (e.key === 'p' || e.key === ' ') {
       handlePlayPause()
     }
