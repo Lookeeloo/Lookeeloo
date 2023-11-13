@@ -82,7 +82,9 @@ body {
 .lkui-video-player {
   position: relative;
   border-radius: 10px;
-  width: auto;
+  width: 100%;
+  height: 100%;
+  background-color: #000000;
 }
 
 .lkui-video-player-containers {
@@ -92,7 +94,7 @@ body {
 }
 
 .lkui-video-element {
-  width: auto;
+  width: 100%;
   border-radius: 15px;
   height: 100%;
   margin: 0 auto;
@@ -297,6 +299,29 @@ h1 {
 }
 .lkui-mute-button svg {
   animation: play-scale-inverse 0.5s ease;
+}
+.lkui-spinner-container {
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+.lkui-spinner {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  position: absolute;
+  top: calc(50% - 100px);
+  z-index: 9999999999;
+  text-align: center;
+  background: 
+    radial-gradient(farthest-side, var(--lkui-theme-color) 94%, #0000) top/24px 24px no-repeat,
+    conic-gradient(#0000 30%, var(--lkui-theme-color));
+  -webkit-mask: radial-gradient(farthest-side, #0000 calc(100% - 24px), #000 0);
+  animation: s3 1s infinite linear;
+}
+
+@keyframes s3{ 
+  100%{transform: rotate(1turn)}
 }
 p {
   margin: 0;

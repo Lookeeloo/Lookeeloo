@@ -19,9 +19,18 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
   const ProgressBar = useRef<HTMLProgressElement>(null);
   const ControlBar = useRef<HTMLDivElement>(null)
   const Player = useRef<HTMLDivElement>(null)
+  const Spinner = useRef<HTMLDivElement>(null)
   const SeekerElement = useRef<HTMLInputElement & { isSeeking?: boolean }>(null);
   const PlayElement = isPaused ? Play24Filled : Pause24Filled;
   const SpeakerElement = isMuted ? SpeakerMute24Filled : Speaker224Filled;
+
+  const handleBuffering = () => {
+    Spinner.current!.style.display = 'flex'
+  };
+
+  const handlePlaying = () => {
+    Spinner.current!.style.display = 'none'
+  };
   const formatTime = (time: number): string => {
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
@@ -31,18 +40,18 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
   };  
 
   useEffect(() => {
-    const videoCurrent = VideoElement.current;
+    const videoCurrent = VideoElement.current!;
 
     if (Player.current) {
       if (api.height != null) {
         const playerContainer = Player.current
         const playerHeight = playerContainer.offsetHeight
-        const playerWidth = playerHeight * (16 / 9)
+        const playerWidth = playerHeight * (videoCurrent.height / videoCurrent.width)
         playerContainer.style.width = `${playerWidth}px`
       } else if (api.width != null) {
         const playerContainer = Player.current
         const playerWidth = playerContainer.offsetWidth
-        const playerHeight = playerWidth * (16 / 9)
+        const playerHeight = playerWidth * (videoCurrent.height / videoCurrent.width)
         playerContainer.style.height = `${playerHeight}px`
       }
     }
@@ -246,7 +255,10 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
           </div>
         </div>
       </div>
-      <video controls={false} className="lkui-video-element" ref={VideoElement} src={api.videoPath} autoPlay={true}></video>
+      <div className='lkui-spinner-container' ref={Spinner}>
+        <div className='lkui-spinner'></div>
+      </div>
+      <video controls={false} className="lkui-video-element" ref={VideoElement} src={api.videoPath} autoPlay={true} onWaiting={handleBuffering} onPlaying={handlePlaying}></video>
     </div>
   );
 }
