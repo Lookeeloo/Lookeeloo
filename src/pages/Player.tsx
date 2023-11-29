@@ -1,15 +1,47 @@
-import { useParams } from "react-router-dom"
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import LKUIVideoPlayer from "../components/LKUIVideoPlayer";
+import JSONTestData from "../tests/movies.json";
+
 function Player() {
-    const {id} = useParams<{id: string}>();
-    if (id == null || id == '') {
-        console.error('Failed to update params')
-    }
-    return (
-        <div className="lkui-player-page">
-            <LKUIVideoPlayer videoPath="https://upload.wikimedia.org/wikipedia/commons/7/74/Sprite_Fright_-_Open_Movie_by_Blender_Studio.webm" height={550}></LKUIVideoPlayer>
-            <h2>This is a video. The ID is {id}</h2>
-        </div>
-    )
+  const { id } = useParams<{ id: string }>();
+  const [moviesData, setMoviesData] = useState<{ movies: Movie[] } | null>(null);
+
+  useEffect(() => {
+    // Set movies data directly from the imported JSON file
+    setMoviesData(JSONTestData);
+  }, []);
+
+  if (!moviesData) {
+    // Data not loaded yet
+    return null;
+  }
+
+  const { movies } = moviesData;
+
+  // Find the movie object with the matching id
+  const selectedMovie = movies.find((movie) => movie.id === id);
+
+  if (!selectedMovie) {
+    console.error("Movie not found for id:", id);
+    return null;
+  }
+
+  // Extract title and URL from the selected movie
+  const { name, url } = selectedMovie;
+
+  return (
+    <div className="lkui-player-page">
+      <LKUIVideoPlayer videoPath={url} height={550}></LKUIVideoPlayer>
+      <h2>{name}</h2>
+    </div>
+  );
 }
-export default Player
+
+export default Player;
+
+interface Movie {
+  id: string;
+  name: string;
+  url: string;
+}

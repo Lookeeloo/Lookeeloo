@@ -4,6 +4,7 @@ import { Play24Filled, Pause24Filled, FullScreenMaximize24Filled, SpeakerMute24F
 
 interface VideoPlayerAPI {
   videoPath: string;
+  captionsPath?: string;
   width?: number;
   height?: number;
 }
@@ -14,6 +15,7 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
   const [seekValue, setSeekValue] = useState<number>(0);
   const [currentTime, setCurrentTime] = useState<string>('00:00');
   const [duration, setDuration] = useState<string>('00:00');
+  const [captionsArray, setCaptions] = useState([]);
   const VideoElement = useRef<HTMLVideoElement>(null);
   const TimeDisplayElement = useRef<HTMLParagraphElement>(null)
   const ProgressBar = useRef<HTMLProgressElement>(null);
@@ -43,16 +45,18 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
     const videoCurrent = VideoElement.current!;
 
     if (Player.current) {
+      const playerContainer = Player.current;
+
       if (api.height != null) {
-        const playerContainer = Player.current
-        const playerHeight = playerContainer.offsetHeight
-        const playerWidth = playerHeight * (videoCurrent.height / videoCurrent.width)
-        playerContainer.style.width = `${playerWidth}px`
+        const playerHeight = playerContainer.offsetHeight;
+        console.log(`offset height: ${playerHeight}, video width: ${videoCurrent.width}, video height: ${videoCurrent.height}`)
+        const playerWidth = playerHeight * (videoCurrent.width / videoCurrent.height);
+        playerContainer.style.width = `${playerWidth}px`;
       } else if (api.width != null) {
-        const playerContainer = Player.current
-        const playerWidth = playerContainer.offsetWidth
-        const playerHeight = playerWidth * (videoCurrent.height / videoCurrent.width)
-        playerContainer.style.height = `${playerHeight}px`
+        const playerWidth = playerContainer.offsetWidth;
+        console.log(`offset width: ${playerWidth}, video width: ${videoCurrent.width}, video height: ${videoCurrent.height}`)
+        const playerHeight = playerWidth * (videoCurrent.height / videoCurrent.width);
+        playerContainer.style.height = `${playerHeight}px`;
       }
     }
 

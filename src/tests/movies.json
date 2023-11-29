@@ -1,0 +1,19 @@
+{
+    "movies": [
+        {
+            "id": "734JSD94M9E3MC",
+            "name": "Murder Drones - Episode 1 : PILOT - Sample Video",
+            "url": "https://github.com/SerialDesignatorN/cdn/raw/main/murder-drones-e1-pilot-480p.mp4"
+        },
+        {
+            "id": "K210EKDS93EMXM",
+            "name": "Big Buck Bunny - Sample Video",
+            "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+        },
+        {
+            "id": "B28DSKW0REMSX0",
+            "name": "Sprite Fright - Sample Video",
+            "url": "upload.wikimedia.org/wikipedia/commons/7/74/Sprite_Fright_-_Open_Movie_by_Blender_Studio.webm"
+        }
+    ]
+}
