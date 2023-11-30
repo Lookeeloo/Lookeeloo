@@ -27,12 +27,12 @@ function Player() {
     return null;
   }
 
-  // Extract title and URL from the selected movie
-  const { name, url } = selectedMovie;
+  // Extract title, URL, and subtitles from the selected movie
+  const { name, url, subtitles } = selectedMovie;
 
   return (
     <div className="lkui-player-page">
-      <LKUIVideoPlayer videoPath={url} height={550}></LKUIVideoPlayer>
+      <LKUIVideoPlayer videoPath={url} captionsPath={subtitles} height={550}></LKUIVideoPlayer>
       <h2>{name}</h2>
     </div>
   );
@@ -44,4 +44,5 @@ interface Movie {
   id: string;
   name: string;
   url: string;
+  subtitles?: string;
 }

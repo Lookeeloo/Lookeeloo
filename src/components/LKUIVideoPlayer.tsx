@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import LKUITransparentButton from './LKUITransparentButton';
+import srtParser2 from 'srt-parser-2'
 import { Play24Filled, Pause24Filled, FullScreenMaximize24Filled, SpeakerMute24Filled, Speaker224Filled, SkipBack1024Filled, SkipForward1024Filled } from '@fluentui/react-icons';
 
 interface VideoPlayerAPI {
@@ -9,15 +10,23 @@ interface VideoPlayerAPI {
   height?: number;
 }
 
+interface Subtitle {
+  start: number;
+  end: number;
+  text: string;
+}
+
 function LKUIVideoPlayer(api: VideoPlayerAPI) {
   const [isPaused, setIsPaused] = useState<boolean>(true);
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const [seekValue, setSeekValue] = useState<number>(0);
   const [currentTime, setCurrentTime] = useState<string>('00:00');
+  const [intCurTime, setIntCurTime] = useState<number>(0)
   const [duration, setDuration] = useState<string>('00:00');
-  const [captionsArray, setCaptions] = useState([]);
+  const [captions, setCaptions] = useState<Subtitle[]>([]);
   const VideoElement = useRef<HTMLVideoElement>(null);
   const TimeDisplayElement = useRef<HTMLParagraphElement>(null)
+  const CaptionsContainer = useRef<HTMLDivElement>(null);
   const ProgressBar = useRef<HTMLProgressElement>(null);
   const ControlBar = useRef<HTMLDivElement>(null)
   const Player = useRef<HTMLDivElement>(null)
@@ -75,16 +84,12 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
       // Update progress bar and seeker based on the video's time
       videoCurrent.addEventListener('timeupdate', () => {
         const currentTime = videoCurrent.currentTime;
+        setIntCurTime(currentTime);
         const duration = videoCurrent.duration;
 
         // Update progress bar value
         if (ProgressBar.current) {
           ProgressBar.current.value = (currentTime / duration) * 100;
-        }
-
-        // Update seeker input value
-        if (SeekerElement.current) {
-          SeekerElement.current.value = currentTime.toString();
         }
 
         // Update display of current time and total duration
@@ -103,13 +108,54 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
     }
   }, []);
 
-  function handleSeek(e : any) {
+  const parseSRT = (srtData: string): Subtitle[] => {
+    const srtParser = new srtParser2();
+    const parsedData = srtParser.fromSrt(srtData);
+
+    return parsedData.map((subtitle: any) => ({
+      start: subtitle.startSeconds,
+      end: subtitle.endSeconds,
+      text: subtitle.text,
+    }));
+  };
+
+  useEffect(() => {
+    if (api.captionsPath) {
+      fetch(api.captionsPath)
+        .then((response) => response.text())
+        .then((srtData) => {
+          const parsedCaptions = parseSRT(srtData);
+          setCaptions(parsedCaptions);
+        })
+        .catch((error) => {
+          console.error('Error loading captions:', error);
+        });
+    }
+  }, [api.captionsPath]);
+
+  useEffect(() => {
+    const captionsContainer = CaptionsContainer.current;
+
+    if (captionsContainer) {
+      const currentCaption = captions.find((caption) => intCurTime >= caption.start && intCurTime <= caption.end);
+
+      captionsContainer.innerText = currentCaption ? currentCaption.text : '';
+    }
+  }, [intCurTime, captions]);
+  
+
+  function handleSeek(e: any) {
     const seekTime = parseFloat(e.target.value);
     setSeekValue(seekTime);
-
+  
     // Update progress bar value
     if (ProgressBar.current) {
       ProgressBar.current.value = ((seekTime || 0) / (VideoElement.current?.duration || 1)) * 100;
+    }
+  
+    // Update seeker input value
+    if (SeekerElement.current) {
+      SeekerElement.current.value = seekTime.toString();
     }
   }
 
@@ -229,6 +275,7 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
   return (
     <div className="lkui-video-player" ref={Player} style={{width: api.width, height: api.height}} onMouseMove={handleMouseMove}>
       <div className="lkui-video-player-containers">
+        <div className="lkui-video-captions" ref={CaptionsContainer}></div>
         <div className="lkui-video-player-controls" ref={ControlBar}>
           <div className="lkui-video-player-seekbar">
             <progress ref={ProgressBar} className="lkui-video-progress" max={100}></progress>
