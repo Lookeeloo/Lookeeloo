@@ -91,7 +91,11 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
         if (ProgressBar.current) {
           ProgressBar.current.value = (currentTime / duration) * 100;
         }
-
+        // Update seeker input value
+        if (SeekerElement.current) {
+          SeekerElement.current.value = currentTime.toString();
+          console.log(currentTime.toString())
+        }
         // Update display of current time and total duration
         if (TimeDisplayElement.current) {
           TimeDisplayElement.current.innerText = `${formatTime(currentTime)} / ${formatTime(duration)}`;
@@ -147,16 +151,6 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
   function handleSeek(e: any) {
     const seekTime = parseFloat(e.target.value);
     setSeekValue(seekTime);
-  
-    // Update progress bar value
-    if (ProgressBar.current) {
-      ProgressBar.current.value = ((seekTime || 0) / (VideoElement.current?.duration || 1)) * 100;
-    }
-  
-    // Update seeker input value
-    if (SeekerElement.current) {
-      SeekerElement.current.value = seekTime.toString();
-    }
   }
 
   function handleSeekEnd() {
