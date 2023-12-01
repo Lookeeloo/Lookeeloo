@@ -169,15 +169,17 @@ body {
 }
 .lkui-video-captions {
   font-family: 'Consolas', 'DejaVu Sans Mono', 'Hack', 'Liberation Mono', monospace;
-  z-index: 1000; /* Set a z-index higher than the video */
+  z-index: 1000; /* Set a z-index higher than the controls */
   position: absolute;
-  font-size: 14pt;
+  font-size: 16pt;
+  user-select: none;
   text-align: center;
-  bottom: 0;
+  top: calc(100% - 80px); /* Adjust the value to position it just above the controls */
+  margin-bottom: 20px; /* Add a 20px bottom margin */
   background-color: rgba(0, 0, 0, 0.5);
   left: 50%; /* Center horizontally */
   transform: translateX(-50%);
-}
+ }
 
 input[type=range] {
   -webkit-appearance: none;
@@ -282,12 +284,26 @@ input[type=range].volume::-moz-range-thumb {
   display: flex;
   justify-content: flex-end !important;
 }
-.lkui-video-player-timecode {
-  font-size: 18pt;
+.lkui-video-player-timecode-primary {
   margin-bottom: -13.5px;
+  display: inline-block;
   user-select: none;
   margin-right: 15px;
   font-weight: 700;
+}
+.lkui-video-player-timecode-information {
+  margin-bottom: -13.5px;
+  display: inline-block;
+  user-select: none;
+  margin-right: 15px;
+  font-weight: 400;
+}
+.lkui-video-player-timecode {
+  font-size: 14pt;
+  margin-bottom: -13.5px;
+  display: inline-block;
+  user-select: none;
+  margin-right: 15px;
 }
 .lkui-fullscreen {
   border-radius: 0 !important;

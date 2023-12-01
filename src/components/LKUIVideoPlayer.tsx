@@ -14,6 +14,7 @@ import {
 interface VideoPlayerAPI {
   videoPath: string;
   captionsPath?: string;
+  videoName: string;
   width?: number;
   height?: number;
 }
@@ -320,9 +321,16 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
               <LKUITransparentButton className="lkui-quick-seek-left" regComponent={SkipBack1024Filled} onClick={() => handleQuickSeek(QuickSeekDirection.Back10)} title="Rewind 10 (<-)"></LKUITransparentButton>
               <LKUITransparentButton className="lkui-quick-seek-right" regComponent={SkipForward1024Filled} onClick={() => handleQuickSeek(QuickSeekDirection.Forward10)} title="Forward 10 (->)"></LKUITransparentButton>
               <LKUITransparentButton className="lkui-mute-button" regComponent={SpeakerElement} onClick={handleMute} title="Mute (m)"></LKUITransparentButton>
-              <p className="lkui-video-player-timecode" ref={TimeDisplayElement}>
-                00:00 / 00:00
-              </p>
+              <div className="lkui-video-player-timecode">
+                <div className="lkui-video-player-timecode-primary" ref={TimeDisplayElement}>
+                  00:00 / 00:00
+                </div>
+                &bull;
+                &nbsp;
+                <div className='lkui-video-player-timecode-information'>
+                  {api.videoName}
+                </div>
+              </div>
             </div>
             <div className="lkui-video-player-controls-right">
               <LKUITransparentButton regComponent={FullScreenMaximize24Filled} onClick={handleFullScreen} title="Fullscreen (f)"></LKUITransparentButton>

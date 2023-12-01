@@ -32,7 +32,7 @@ function Player() {
 
   return (
     <div className="lkui-player-page">
-      <LKUIVideoPlayer videoPath={url} captionsPath={subtitles} height={550}></LKUIVideoPlayer>
+      <LKUIVideoPlayer videoPath={url} captionsPath={subtitles} videoName={name} height={550}></LKUIVideoPlayer>
       <h2>{name}</h2>
     </div>
   );
