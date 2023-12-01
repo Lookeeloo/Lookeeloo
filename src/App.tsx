@@ -11,7 +11,7 @@ import Player from './pages/Player';
 
 const ConditionalStuff: React.FC<{}> = (): React.ReactElement | null => {
   const loc = useLocation()
-  if (window.location.href.includes('lookeeloo-dev') || window.location.href.includes('localhost')) {
+  if (window.location.href.includes('lookeeloo-canary') || window.location.href.includes('localhost')) {
     document.title = 'Lookeeloo (Canary [BETA])'
     return (
       <div className='lkui-on-canary'>
