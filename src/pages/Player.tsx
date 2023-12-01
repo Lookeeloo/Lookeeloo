@@ -29,6 +29,11 @@ function Player() {
 
   // Extract title, URL, and subtitles from the selected movie
   const { name, url, subtitles } = selectedMovie;
+  if (window.location.href.includes('lookeeloo-canary') || window.location.href.includes('localhost')) {
+    document.title = `${name} - Lookeeloo (Canary [BETA])`
+  } else {
+    document.title = `${name} - Lookeeloo`;
+  }
 
   return (
     <div className="lkui-player-page">
