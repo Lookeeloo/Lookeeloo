@@ -1,7 +1,15 @@
 import React, { useRef, useState, useEffect } from 'react';
 import LKUITransparentButton from './LKUITransparentButton';
-import srtParser2 from 'srt-parser-2'
-import { Play24Filled, Pause24Filled, FullScreenMaximize24Filled, SpeakerMute24Filled, Speaker224Filled, SkipBack1024Filled, SkipForward1024Filled } from '@fluentui/react-icons';
+import srtParser2 from 'srt-parser-2';
+import {
+  Play24Filled,
+  Pause24Filled,
+  FullScreenMaximize24Filled,
+  SpeakerMute24Filled,
+  Speaker224Filled,
+  SkipBack1024Filled,
+  SkipForward1024Filled,
+} from '@fluentui/react-icons';
 
 interface VideoPlayerAPI {
   videoPath: string;
@@ -16,31 +24,35 @@ interface Subtitle {
   text: string;
 }
 
+let timeout: any;
+
 function LKUIVideoPlayer(api: VideoPlayerAPI) {
   const [isPaused, setIsPaused] = useState<boolean>(true);
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const [seekValue, setSeekValue] = useState<number>(0);
   const [currentTime, setCurrentTime] = useState<string>('00:00');
-  const [intCurTime, setIntCurTime] = useState<number>(0)
+  const [intCurTime, setIntCurTime] = useState<number>(0);
+  const [previousCurrentTime, setPreviousCurrentTime] = useState<number>(0);
   const [duration, setDuration] = useState<string>('00:00');
+  const currentTimeRef = useRef<number>(0);
   const [captions, setCaptions] = useState<Subtitle[]>([]);
   const VideoElement = useRef<HTMLVideoElement>(null);
-  const TimeDisplayElement = useRef<HTMLParagraphElement>(null)
+  const TimeDisplayElement = useRef<HTMLParagraphElement>(null);
   const CaptionsContainer = useRef<HTMLDivElement>(null);
   const ProgressBar = useRef<HTMLProgressElement>(null);
-  const ControlBar = useRef<HTMLDivElement>(null)
-  const Player = useRef<HTMLDivElement>(null)
-  const Spinner = useRef<HTMLDivElement>(null)
+  const ControlBar = useRef<HTMLDivElement>(null);
+  const Player = useRef<HTMLDivElement>(null);
+  const Spinner = useRef<HTMLDivElement>(null);
   const SeekerElement = useRef<HTMLInputElement & { isSeeking?: boolean }>(null);
   const PlayElement = isPaused ? Play24Filled : Pause24Filled;
   const SpeakerElement = isMuted ? SpeakerMute24Filled : Speaker224Filled;
 
   const handleBuffering = () => {
-    Spinner.current!.style.display = 'flex'
+    Spinner.current!.style.display = 'flex';
   };
 
   const handlePlaying = () => {
-    Spinner.current!.style.display = 'none'
+    Spinner.current!.style.display = 'none';
   };
   const formatTime = (time: number): string => {
     const minutes = Math.floor(time / 60);
@@ -48,7 +60,7 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
     const formattedMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
     const formattedSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
     return `${formattedMinutes}:${formattedSeconds}`;
-  };  
+  };
 
   useEffect(() => {
     const videoCurrent = VideoElement.current!;
@@ -58,21 +70,21 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
 
       if (api.height != null) {
         const playerHeight = playerContainer.offsetHeight;
-        console.log(`offset height: ${playerHeight}, video width: ${videoCurrent.width}, video height: ${videoCurrent.height}`)
         const playerWidth = playerHeight * (videoCurrent.width / videoCurrent.height);
         playerContainer.style.width = `${playerWidth}px`;
       } else if (api.width != null) {
         const playerWidth = playerContainer.offsetWidth;
-        console.log(`offset width: ${playerWidth}, video width: ${videoCurrent.width}, video height: ${videoCurrent.height}`)
         const playerHeight = playerWidth * (videoCurrent.height / videoCurrent.width);
         playerContainer.style.height = `${playerHeight}px`;
       }
     }
+  }, []);
 
+  useEffect(() => {
+    const videoCurrent = VideoElement.current!;
     if (videoCurrent) {
       videoCurrent.autoplay = false;
 
-      // Add an event listener to play the video when it has finished loading
       videoCurrent.addEventListener('loadeddata', () => {
         const duration = videoCurrent.duration;
         if (TimeDisplayElement.current) {
@@ -81,29 +93,25 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
         setIsPaused(true);
       });
 
-      // Update progress bar and seeker based on the video's time
       videoCurrent.addEventListener('timeupdate', () => {
         const currentTime = videoCurrent.currentTime;
-        setIntCurTime(currentTime);
         const duration = videoCurrent.duration;
 
-        // Update progress bar value
         if (ProgressBar.current) {
           ProgressBar.current.value = (currentTime / duration) * 100;
         }
-        // Update seeker input value
+
         if (SeekerElement.current) {
-          SeekerElement.current.value = currentTime.toString();
-          console.log(currentTime.toString())
+          SeekerElement.current.value = Math.floor(currentTime).toString();
         }
-        // Update display of current time and total duration
+
         if (TimeDisplayElement.current) {
           TimeDisplayElement.current.innerText = `${formatTime(currentTime)} / ${formatTime(duration)}`;
         }
+        currentTimeRef.current! = currentTime;
       });
 
       return () => {
-        // Remove the event listeners when the component unmounts
         if (videoCurrent) {
           videoCurrent.removeEventListener('loadeddata', () => {});
           videoCurrent.removeEventListener('timeupdate', () => {});
@@ -141,16 +149,31 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
     const captionsContainer = CaptionsContainer.current;
 
     if (captionsContainer) {
-      const currentCaption = captions.find((caption) => intCurTime >= caption.start && intCurTime <= caption.end);
+      const updateCaptionsDisplay = () => {
+        const currentCaption = captions.find(
+          (caption) =>
+            currentTimeRef.current! >= caption.start && currentTimeRef.current! <= caption.end
+        );
 
-      captionsContainer.innerText = currentCaption ? currentCaption.text : '';
+        captionsContainer.innerText = currentCaption ? currentCaption.text : '';
+      };
+
+      updateCaptionsDisplay(); // Initial display
+
+      const intervalId = setInterval(updateCaptionsDisplay, 500); // Update every 500ms
+
+      return () => {
+        clearInterval(intervalId);
+      };
     }
-  }, [intCurTime, captions]);
-  
+  }, [captions]);
+
+  const SEEK_BUFFER = 0.1;
 
   function handleSeek(e: any) {
     const seekTime = parseFloat(e.target.value);
-    setSeekValue(seekTime);
+    const roundedSeekTime = Math.round(seekTime * 100) / 100;
+    setSeekValue(roundedSeekTime);
   }
 
   function handleSeekEnd() {
@@ -158,12 +181,17 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
 
     if (videoCurrent) {
       videoCurrent.currentTime = seekValue;
+      setTimeout(() => {
+        if (Math.abs(videoCurrent.currentTime - seekValue) <= SEEK_BUFFER) {
+          videoCurrent.removeEventListener('timeupdate', () => {});
+        }
+      }, 500);
     }
   }
-  
+
   function handlePlayPause() {
     const videoCurrent = VideoElement.current;
-  
+
     if (videoCurrent?.paused === false) {
       videoCurrent?.pause();
       setIsPaused(true);
@@ -175,10 +203,10 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
       });
     }
   }
-  
+
   function handleMute() {
     const videoCurrent = VideoElement.current;
-  
+
     if (videoCurrent && videoCurrent.muted === true) {
       videoCurrent.muted = false;
       setIsMuted(false);
@@ -187,31 +215,31 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
       setIsMuted(true);
     }
   }
+
   function handleFullScreen() {
-    const playerControls = ControlBar.current!
+    const playerControls = ControlBar.current!;
     if (document.fullscreenElement) {
-      document.exitFullscreen()
-      Player.current?.classList.remove('lkui-fullscreen')
-      playerControls.style.display = 'flex'
+      document.exitFullscreen();
+      Player.current?.classList.remove('lkui-fullscreen');
+      playerControls.style.display = 'flex';
     } else {
-      Player.current?.requestFullscreen()
-      playerControls.style.display = 'none'
-      Player.current?.classList.add('lkui-fullscreen')
+      Player.current?.requestFullscreen();
+      playerControls.style.display = 'none';
+      Player.current?.classList.add('lkui-fullscreen');
     }
   }
+
   if (api.width === 0 || api.width === null) {
-    api.width = 800
+    api.width = 800;
   }
-  var timeout : any
 
   function handleMouseMove() {
     const playerControls = ControlBar.current!;
 
     if (document.fullscreenElement) {
-      // Entering fullscreen
       if (playerControls) {
         playerControls.style.display = 'flex';
-        clearTimeout(timeout); // Clear any existing timeout
+        clearTimeout(timeout);
         timeout = setTimeout(() => {
           if (playerControls) {
             playerControls.style.display = 'none';
@@ -219,22 +247,22 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
         }, 4000);
       }
     } else {
-      // Exiting fullscreen
       if (playerControls) {
         playerControls.style.display = 'flex';
       }
-      clearTimeout(timeout); // Clear the timeout when exiting fullscreen
+      clearTimeout(timeout);
     }
   }
 
   enum QuickSeekDirection {
     Back10,
-    Forward10
+    Forward10,
   }
+
   function handleQuickSeek(direction: QuickSeekDirection) {
     if (VideoElement.current) {
       const currentTime = VideoElement.current.currentTime;
-      
+
       if (currentTime !== undefined) {
         switch (direction) {
           case QuickSeekDirection.Back10:
@@ -247,27 +275,25 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
       }
     }
   }
-  document.onkeydown = function(e) {
-    handleMouseMove()
-    e.preventDefault()
+
+  document.onkeydown = function (e) {
+    handleMouseMove();
+    e.preventDefault();
     if (e.key === 'p' || e.key === ' ') {
-      handlePlayPause()
+      handlePlayPause();
+    } else if (e.key === 'm') {
+      handleMute();
+    } else if (e.key === 'ArrowLeft') {
+      handleQuickSeek(QuickSeekDirection.Back10);
+    } else if (e.key === 'ArrowRight') {
+      handleQuickSeek(QuickSeekDirection.Forward10);
+    } else if (e.key === 'f') {
+      handleFullScreen();
     }
-    else if (e.key === 'm') {
-      handleMute()
-    }
-    else if (e.key === 'ArrowLeft') {
-      handleQuickSeek(QuickSeekDirection.Back10)
-    }
-    else if (e.key === 'ArrowRight') {
-      handleQuickSeek(QuickSeekDirection.Forward10)
-    }
-    else if (e.key === 'f') {
-      handleFullScreen()
-    }
-  }
+  };
+
   return (
-    <div className="lkui-video-player" ref={Player} style={{width: api.width, height: api.height}} onMouseMove={handleMouseMove}>
+    <div className="lkui-video-player" ref={Player} style={{ width: api.width, height: api.height }} onMouseMove={handleMouseMove}>
       <div className="lkui-video-player-containers">
         <div className="lkui-video-captions" ref={CaptionsContainer}></div>
         <div className="lkui-video-player-controls" ref={ControlBar}>
@@ -280,7 +306,7 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
               value={seekValue}
               min={0}
               max={(VideoElement.current?.duration || 1) || 0}
-              step={1}
+              step={0.000001}
               onChange={handleSeek}
               onInput={handleSeek}
               onMouseUp={handleSeekEnd}
@@ -290,20 +316,22 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
           <br></br>
           <div className="lkui-video-player-button-controls">
             <div className="lkui-video-player-controls-left">
-              <LKUITransparentButton className='lkui-play-button' regComponent={PlayElement} onClick={handlePlayPause} title='Play (p)'></LKUITransparentButton>
-              <LKUITransparentButton className="lkui-quick-seek-left" regComponent={SkipBack1024Filled} onClick={() => handleQuickSeek(QuickSeekDirection.Back10)} title='Rewind 10 (<-)'></LKUITransparentButton>
-              <LKUITransparentButton className="lkui-quick-seek-right" regComponent={SkipForward1024Filled} onClick={() => handleQuickSeek(QuickSeekDirection.Forward10)} title='Forward 10 (->)'></LKUITransparentButton>
-              <LKUITransparentButton className='lkui-mute-button' regComponent={SpeakerElement} onClick={handleMute} title='Mute (m)'></LKUITransparentButton>
-              <p className='lkui-video-player-timecode' ref={TimeDisplayElement}>00:00 / 00:00</p>
+              <LKUITransparentButton className="lkui-play-button" regComponent={PlayElement} onClick={handlePlayPause} title="Play (p)"></LKUITransparentButton>
+              <LKUITransparentButton className="lkui-quick-seek-left" regComponent={SkipBack1024Filled} onClick={() => handleQuickSeek(QuickSeekDirection.Back10)} title="Rewind 10 (<-)"></LKUITransparentButton>
+              <LKUITransparentButton className="lkui-quick-seek-right" regComponent={SkipForward1024Filled} onClick={() => handleQuickSeek(QuickSeekDirection.Forward10)} title="Forward 10 (->)"></LKUITransparentButton>
+              <LKUITransparentButton className="lkui-mute-button" regComponent={SpeakerElement} onClick={handleMute} title="Mute (m)"></LKUITransparentButton>
+              <p className="lkui-video-player-timecode" ref={TimeDisplayElement}>
+                00:00 / 00:00
+              </p>
             </div>
             <div className="lkui-video-player-controls-right">
-              <LKUITransparentButton regComponent={FullScreenMaximize24Filled} onClick={handleFullScreen} title='Fullscreen (f)'></LKUITransparentButton>
+              <LKUITransparentButton regComponent={FullScreenMaximize24Filled} onClick={handleFullScreen} title="Fullscreen (f)"></LKUITransparentButton>
             </div>
           </div>
         </div>
       </div>
-      <div className='lkui-spinner-container' ref={Spinner}>
-        <div className='lkui-spinner'></div>
+      <div className="lkui-spinner-container" ref={Spinner}>
+        <div className="lkui-spinner"></div>
       </div>
       <video controls={false} className="lkui-video-element" ref={VideoElement} src={api.videoPath} autoPlay={true} onWaiting={handleBuffering} onPlaying={handlePlaying}></video>
     </div>
