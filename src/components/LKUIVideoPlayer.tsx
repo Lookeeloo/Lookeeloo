@@ -239,16 +239,19 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
 
     if (document.fullscreenElement) {
       if (playerControls) {
+        VideoElement.current!.style.cursor = 'default'
         playerControls.style.display = 'flex';
         clearTimeout(timeout);
         timeout = setTimeout(() => {
           if (playerControls) {
+            VideoElement.current!.style.cursor = 'none'
             playerControls.style.display = 'none';
           }
         }, 4000);
       }
     } else {
       if (playerControls) {
+        VideoElement.current!.style.cursor = 'default'
         playerControls.style.display = 'flex';
       }
       clearTimeout(timeout);
@@ -341,7 +344,7 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
       <div className="lkui-spinner-container" ref={Spinner}>
         <div className="lkui-spinner"></div>
       </div>
-      <video controls={false} className="lkui-video-element" ref={VideoElement} src={api.videoPath} autoPlay={true} onWaiting={handleBuffering} onPlaying={handlePlaying}></video>
+      <video controls={false} className="lkui-video-element" ref={VideoElement} src={api.videoPath} autoPlay={true} onWaiting={handleBuffering} onPlaying={handlePlaying} onClick={() => {handleMouseMove(); handlePlayPause()}}></video>
     </div>
   );
 }
