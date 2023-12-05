@@ -291,8 +291,15 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
       handleQuickSeek(QuickSeekDirection.Back10);
     } else if (e.key === 'ArrowRight') {
       handleQuickSeek(QuickSeekDirection.Forward10);
-    } else if (e.key === 'f' || e.key === 'Escape') {
+    } else if (e.key === 'f') {
       handleFullScreen();
+    } else if (e.key === 'Escape') {
+      if (document.fullscreenElement) {
+        const playerControls = ControlBar.current!;
+        document.exitFullscreen();
+        Player.current?.classList.remove('lkui-fullscreen');
+        playerControls.style.display = 'flex';
+      }
     }
   };
 
