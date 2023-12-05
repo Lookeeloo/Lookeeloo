@@ -5,17 +5,16 @@ import LKUINavButton from './components/LKUINavButton';
 import { Home24Regular, Home24Filled, Info24Regular, Info24Filled } from '@fluentui/react-icons';
 import AboutUs from './pages/AboutUs';
 import './assets/fonts/typonine.css'
-import { BrowserRouter as Router, Route, Switch, Link, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
 import './style/App.css';
 import Player from './pages/Player';
 
 const ConditionalStuff: React.FC<{}> = (): React.ReactElement | null => {
-  const loc = useLocation()
   if (window.location.href.includes('lookeeloo-canary') || window.location.href.includes('localhost')) {
     document.title = 'Lookeeloo (Canary [BETA])'
     return (
       <div className='lkui-on-canary'>
-        <p>Lookeeloo Canary Channel. Bugs may happen. Report any bugs to <Link to='mailto:zeanfender11@gmail.com'>zeanfender11@gmail.com</Link> or <Link to='mailto:arsyadyudhistira2@gmail.com'>arsyadyudhistira2@gmail.com</Link></p>
+        <p>Lookeeloo Canary Channel. Errors will be automatically alerted. Additional bugs may be reported to <Link to='mailto:zeanfender11@gmail.com'>zeanfender11@gmail.com</Link> or <Link to='mailto:arsyadyudhistira2@gmail.com'>arsyadyudhistira2@gmail.com</Link></p>
       </div>
     )
   } else {
@@ -29,7 +28,7 @@ function App() {
       <Router>
         <div className='lkui-header'>
           <Link to='/'>
-            <img src={logo} width={150}></img>
+            <img src={logo} width={150} alt='Lookeeloo logo'></img>
           </Link>
           <LKUINavButton path='/' regComponent={Home24Regular} filledComponent={Home24Filled} />
           <LKUINavButton path='/about-us' regComponent={Info24Regular} filledComponent={Info24Filled} />

@@ -31,10 +31,6 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
   const [isPaused, setIsPaused] = useState<boolean>(true);
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const [seekValue, setSeekValue] = useState<number>(0);
-  const [currentTime, setCurrentTime] = useState<string>('00:00');
-  const [intCurTime, setIntCurTime] = useState<number>(0);
-  const [previousCurrentTime, setPreviousCurrentTime] = useState<number>(0);
-  const [duration, setDuration] = useState<string>('00:00');
   const currentTimeRef = useRef<number>(0);
   const [captions, setCaptions] = useState<Subtitle[]>([]);
   const VideoElement = useRef<HTMLVideoElement>(null);
