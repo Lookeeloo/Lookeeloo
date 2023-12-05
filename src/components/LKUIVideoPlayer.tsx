@@ -78,6 +78,7 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
   }, []);
 
   useEffect(() => {
+    var refreshInt: any;
     const videoCurrent = VideoElement.current!;
     if (videoCurrent) {
       videoCurrent.autoplay = false;
@@ -105,7 +106,7 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
         if (TimeDisplayElement.current) {
           TimeDisplayElement.current.innerText = `${formatTime(currentTime)} / ${formatTime(duration)}`;
         }
-        currentTimeRef.current! = currentTime;
+        currentTimeRef.current! = currentTime
       });
 
       return () => {
@@ -157,7 +158,7 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
 
       updateCaptionsDisplay(); // Initial display
 
-      const intervalId = setInterval(updateCaptionsDisplay, 500); // Update every 500ms
+      const intervalId = setInterval(updateCaptionsDisplay, 1); // Update every 1ms
 
       return () => {
         clearInterval(intervalId);
