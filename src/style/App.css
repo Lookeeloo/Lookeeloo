@@ -168,13 +168,13 @@ body {
   border-radius: 20px;
 }
 .lkui-video-captions {
-  font-family: 'Consolas', 'Menlo', 'DejaVu Sans Mono', 'Hack', 'Liberation Mono', monospace;
+  font-family: 'Consolas', 'SF Mono', 'Menlo', 'DejaVu Sans Mono', 'Hack', 'Liberation Mono', monospace;
   z-index: 1000; /* Set a z-index higher than the controls */
   position: absolute;
-  font-size: 16pt;
+  font-size: 18pt;
   user-select: none;
   text-align: center;
-  top: calc(100% - 90px); /* Adjust the value to position it just above the controls */
+  top: calc(100% - 100px); /* Adjust the value to position it just above the controls */
   margin-bottom: 20px; /* Add a 20px bottom margin */
   text-shadow: #000 2px 2px 3px;
   left: 50%; /* Center horizontally */
