@@ -176,7 +176,7 @@ body {
   text-align: center;
   top: calc(100% - 90px); /* Adjust the value to position it just above the controls */
   margin-bottom: 20px; /* Add a 20px bottom margin */
-  background-color: rgba(0, 0, 0, 0.5);
+  text-shadow: #000 2px 2px 3px;
   left: 50%; /* Center horizontally */
   transform: translateX(-50%);
  }

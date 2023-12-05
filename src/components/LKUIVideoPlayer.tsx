@@ -155,8 +155,8 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
           (caption) =>
             currentTimeRef.current! >= caption.start && currentTimeRef.current! <= caption.end
         );
-
-        captionsContainer.innerText = currentCaption ? currentCaption.text : '';
+        // Enable custom styled subtitles
+        captionsContainer.innerHTML = currentCaption ? currentCaption.text : '';
       };
 
       updateCaptionsDisplay(); // Initial display
@@ -291,7 +291,7 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
       handleQuickSeek(QuickSeekDirection.Back10);
     } else if (e.key === 'ArrowRight') {
       handleQuickSeek(QuickSeekDirection.Forward10);
-    } else if (e.key === 'f') {
+    } else if (e.key === 'f' || e.key === 'Escape') {
       handleFullScreen();
     }
   };
