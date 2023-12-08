@@ -9,6 +9,8 @@ import {
   Speaker224Filled,
   SkipBack1024Filled,
   SkipForward1024Filled,
+  ClosedCaptionOff24Filled,
+  ClosedCaption24Filled,
 } from '@fluentui/react-icons';
 
 interface VideoPlayerAPI {
@@ -30,7 +32,9 @@ let timeout: any;
 function LKUIVideoPlayer(api: VideoPlayerAPI) {
   const [isPaused, setIsPaused] = useState<boolean>(true);
   const [isMuted, setIsMuted] = useState<boolean>(false);
+  const [captionsIsHidden, setCaptionsVisibility] = useState<boolean>(false)
   const [seekValue, setSeekValue] = useState<number>(0);
+  const [showMetadata, setShowMetadata] = useState<boolean>(false);
   const currentTimeRef = useRef<number>(0);
   const [captions, setCaptions] = useState<Subtitle[]>([]);
   const VideoElement = useRef<HTMLVideoElement>(null);
@@ -43,6 +47,7 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
   const SeekerElement = useRef<HTMLInputElement & { isSeeking?: boolean }>(null);
   const PlayElement = isPaused ? Play24Filled : Pause24Filled;
   const SpeakerElement = isMuted ? SpeakerMute24Filled : Speaker224Filled;
+  const CaptionsElement = captionsIsHidden ? ClosedCaptionOff24Filled: ClosedCaption24Filled;
 
   const handleBuffering = () => {
     Spinner.current!.style.display = 'flex';
@@ -165,6 +170,23 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
       };
     }
   }, [captions]);
+  useEffect(() => {
+    let metadataTimeout: NodeJS.Timeout;
+
+    if (isPaused && currentTimeRef.current > 0) {
+      metadataTimeout = setTimeout(() => {
+        setShowMetadata(true);
+        ControlBar.current!.style.display = 'none'
+      }, 5000);
+    } else {
+      setShowMetadata(false);
+      ControlBar.current!.style.display = 'flex'
+    }
+
+    return () => {
+      clearTimeout(metadataTimeout);
+    };
+  }, [isPaused, currentTimeRef.current]);
 
   const SEEK_BUFFER = 0.1;
 
@@ -277,6 +299,18 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
     }
   }
 
+  function toggleCaptions() {
+    if (CaptionsContainer.current) {
+      if (captionsIsHidden === false) {
+        CaptionsContainer.current.style.display = 'none';
+        setCaptionsVisibility(true)
+      } else {
+        CaptionsContainer.current.style.display = 'block';
+        setCaptionsVisibility(false)
+      }
+    }
+  }
+
   document.onkeydown = function (e) {
     handleMouseMove();
     e.preventDefault();
@@ -300,9 +334,19 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
     }
   };
 
+  const metadataDisplay = showMetadata && (
+    <div className="lkui-video-player-idle">
+      <div className='lkui-video-player-idle-details'>
+        <p>You're watching:</p>
+        <h1>{api.videoName}</h1>
+      </div>
+    </div>
+  )
+
   return (
     <div className="lkui-video-player" ref={Player} style={{ width: api.width, height: api.height }} onMouseMove={handleMouseMove}>
       <div className="lkui-video-player-containers">
+        {metadataDisplay}
         <div className="lkui-video-captions" ref={CaptionsContainer}></div>
         <div className="lkui-video-player-controls" ref={ControlBar}>
           <div className="lkui-video-player-seekbar">
@@ -340,6 +384,7 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
               </div>
             </div>
             <div className="lkui-video-player-controls-right">
+              <LKUITransparentButton className='lkui-captions-button' regComponent={CaptionsElement} onClick={toggleCaptions} title='Toggle captions (c)'></LKUITransparentButton>
               <LKUITransparentButton regComponent={FullScreenMaximize24Filled} onClick={handleFullScreen} title="Fullscreen (f)"></LKUITransparentButton>
             </div>
           </div>

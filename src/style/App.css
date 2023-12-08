@@ -277,12 +277,17 @@ input[type=range].volume::-moz-range-thumb {
 }
 .lkui-video-player-controls-left {
   display: flex;
-  justify-content: flex-start !important;
+  justify-content: flex-start;
   align-items: center;
 }
+
 .lkui-video-player-controls-right {
   display: flex;
-  justify-content: flex-end !important;
+  justify-content: flex-end;
+  align-items: center; /* Align items to the center if needed */
+  /* Add the following styles to help with positioning */
+  position: absolute;
+  right: 0;
 }
 .lkui-video-player-timecode-primary {
   margin-bottom: -13.5px;
@@ -314,6 +319,31 @@ input[type=range].volume::-moz-range-thumb {
 .lkui-fullscreen .lkui-video-player-controls {
   border-radius: 0;
 }
+.lkui-video-player-idle {
+  z-index: 1000;
+  user-select: none;
+  position: absolute;
+  background-color: rgba(0,0,0,0.8);
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.lkui-fullscreen .lkui-video-player-idle {
+  border-radius: 0px;
+}
+.lkui-video-player-idle-details {
+  margin-left: 70px;
+  max-width: fit-content;
+}
+.lkui-video-player-idle-details h1 {
+  font-size: 56pt;
+}
+.lkui-video-player-idle-details p {
+  font-size: 24pt;
+}
 h1 {
   margin: 0;
 }
@@ -341,6 +371,13 @@ h1 {
   transform: scale(1.3);
 }
 .lkui-mute-button svg {
+  animation: play-scale-inverse 0.5s ease;
+}
+.lkui-captions-button:active svg {
+  animation: play-scale 0.5s ease;
+  transform: scale(1.3);
+}
+.lkui-captions-button svg {
   animation: play-scale-inverse 0.5s ease;
 }
 .lkui-spinner-container {
