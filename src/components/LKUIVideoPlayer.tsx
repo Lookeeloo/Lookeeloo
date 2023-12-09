@@ -35,6 +35,7 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
   const [captionsIsHidden, setCaptionsVisibility] = useState<boolean>(false)
   const [seekValue, setSeekValue] = useState<number>(0);
   const [showMetadata, setShowMetadata] = useState<boolean>(false);
+  const [isRippleClicked, setRippleClicked] = useState<boolean>(false); // Add this line
   const currentTimeRef = useRef<number>(0);
   const [captions, setCaptions] = useState<Subtitle[]>([]);
   const VideoElement = useRef<HTMLVideoElement>(null);
@@ -45,6 +46,7 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
   const Player = useRef<HTMLDivElement>(null);
   const Spinner = useRef<HTMLDivElement>(null);
   const SeekerElement = useRef<HTMLInputElement & { isSeeking?: boolean }>(null);
+  const TitleOnFS = useRef<HTMLDivElement>(null);
   const PlayElement = isPaused ? Play24Filled : Pause24Filled;
   const SpeakerElement = isMuted ? SpeakerMute24Filled : Speaker224Filled;
   const CaptionsElement = captionsIsHidden ? ClosedCaptionOff24Filled: ClosedCaption24Filled;
@@ -211,18 +213,27 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
 
   function handlePlayPause() {
     const videoCurrent = VideoElement.current;
-
+  
     if (videoCurrent?.paused === false) {
       videoCurrent?.pause();
       setIsPaused(true);
     } else {
+      // Add the 'clicked' class to initiate the ripple effect
+      setRippleClicked(true);
+  
       videoCurrent?.play().then(() => {
         setIsPaused(false);
       }).catch((error) => {
         console.error('Error playing video:', error);
       });
+  
+      // Remove the 'clicked' class after a short delay (adjust as needed)
+      setTimeout(() => {
+        setRippleClicked(false);
+      }, 500);
     }
   }
+  
 
   function handleMute() {
     const videoCurrent = VideoElement.current;
@@ -242,9 +253,11 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
       document.exitFullscreen();
       Player.current?.classList.remove('lkui-fullscreen');
       playerControls.style.display = 'flex';
+      TitleOnFS.current!.style.display = 'none'
     } else {
       Player.current?.requestFullscreen();
       playerControls.style.display = 'none';
+      TitleOnFS.current!.style.display = 'block'
       Player.current?.classList.add('lkui-fullscreen');
     }
   }
@@ -260,16 +273,19 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
       if (playerControls) {
         VideoElement.current!.style.cursor = 'default'
         playerControls.style.display = 'flex';
+        TitleOnFS.current!.style.display = 'block'
         clearTimeout(timeout);
         timeout = setTimeout(() => {
           if (playerControls) {
             VideoElement.current!.style.cursor = 'none'
             playerControls.style.display = 'none';
+            TitleOnFS.current!.style.display = 'none'
           }
         }, 4000);
       }
     } else {
       if (playerControls) {
+        TitleOnFS.current!.style.display = 'none'
         VideoElement.current!.style.cursor = 'default'
         playerControls.style.display = 'flex';
       }
@@ -331,6 +347,8 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
         Player.current?.classList.remove('lkui-fullscreen');
         playerControls.style.display = 'flex';
       }
+    } else if (e.key === 'c') {
+      toggleCaptions()
     }
   };
 
@@ -346,6 +364,9 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
   return (
     <div className="lkui-video-player" ref={Player} style={{ width: api.width, height: api.height }} onMouseMove={handleMouseMove}>
       <div className="lkui-video-player-containers">
+        <div className='lkui-video-player-fullscreen-title' ref={TitleOnFS}>
+          <h2>{api.videoName}</h2>
+        </div>
         {metadataDisplay}
         <div className="lkui-video-captions" ref={CaptionsContainer}></div>
         <div className="lkui-video-player-controls" ref={ControlBar}>
