@@ -342,6 +342,8 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
     } else if (e.key === 'f') {
       handleFullScreen();
     } else if (e.key === 'Escape') {
+      // Also handle when Esc is pressed
+      e.preventDefault()
       if (document.fullscreenElement) {
         const playerControls = ControlBar.current!;
         document.exitFullscreen();
