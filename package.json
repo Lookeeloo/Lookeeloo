@@ -1,6 +1,7 @@
 {
   "name": "lookeeloo",
   "version": "0.1.0",
+  "license": "UFO-1.0",
   "private": true,
   "dependencies": {
     "@fluentui/react-icons": "^2.0.222",
