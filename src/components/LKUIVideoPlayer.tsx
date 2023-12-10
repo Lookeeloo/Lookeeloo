@@ -165,7 +165,7 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
 
       updateCaptionsDisplay(); // Initial display
 
-      const intervalId = setInterval(updateCaptionsDisplay, 1); // Update every 1ms
+      const intervalId = setInterval(updateCaptionsDisplay, 0.01); // Update every 0.01ms
 
       return () => {
         clearInterval(intervalId);
