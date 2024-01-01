@@ -299,6 +299,21 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
     Back10,
     Forward10,
   }
+  function DesktopOnlyStuff() {
+    if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+      return null
+    }
+  
+    // Return something for the non-mobile case
+    return (
+      <>
+        &bull;&nbsp;
+        <div className='lkui-video-player-timecode-information'>
+          {api.videoName}
+        </div>
+      </>
+    );
+  }
 
   function handleQuickSeek(direction: QuickSeekDirection) {
     if (VideoElement.current) {
@@ -401,11 +416,7 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
                 <div className="lkui-video-player-timecode-primary" ref={TimeDisplayElement}>
                   00:00 / 00:00
                 </div>
-                &bull;
-                &nbsp;
-                <div className='lkui-video-player-timecode-information'>
-                  {api.videoName}
-                </div>
+                <DesktopOnlyStuff />
               </div>
             </div>
             <div className="lkui-video-player-controls-right">

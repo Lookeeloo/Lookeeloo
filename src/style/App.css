@@ -331,7 +331,7 @@ input[type=range].volume::-moz-range-thumb {
   font-weight: 400;
 }
 .lkui-video-player-timecode {
-  font-size: 14pt;
+  font-size: 12pt;
   margin-bottom: -13.5px;
   display: inline-block;
   user-select: none;
