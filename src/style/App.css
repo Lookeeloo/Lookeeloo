@@ -4,7 +4,7 @@
   --lkui-tertiary-color: #3f3f3f;
   --lkui-light-color: #eaeaea;
   --lkui-theme-color: #ff0000;
-  --lkui-display-fonts: 'Typonine Sans', system-ui, sans-serif;
+  --lkui-display-fonts: 'MarkPro', system-ui, sans-serif;
 }
 @keyframes rotate-left-held {
   0% {
@@ -321,7 +321,7 @@ input[type=range].volume::-moz-range-thumb {
   display: inline-block;
   user-select: none;
   margin-right: 15px;
-  font-weight: 700;
+  font-weight: bold;
 }
 .lkui-video-player-timecode-information {
   margin-bottom: -13.5px;
@@ -373,6 +373,10 @@ input[type=range].volume::-moz-range-thumb {
 }
 h1 {
   margin: 0;
+  font-weight: bold;
+}
+h2 {
+  font-weight: bold;
 }
 .lkui-quick-seek-left:active svg {
   animation: rotate-left-held 0.5s ease;

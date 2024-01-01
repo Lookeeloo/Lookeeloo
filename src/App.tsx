@@ -5,6 +5,7 @@ import LKUINavButton from './components/LKUINavButton';
 import { Home24Regular, Home24Filled, Info24Regular, Info24Filled } from '@fluentui/react-icons';
 import AboutUs from './pages/AboutUs';
 import './assets/fonts/typonine.css'
+import './assets/fonts/mark-pro/markpro.css'
 import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
 import './style/App.css';
 import Player from './pages/Player';
