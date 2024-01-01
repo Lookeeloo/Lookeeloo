@@ -418,7 +418,20 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
       <div className="lkui-spinner-container" ref={Spinner}>
         <div className="lkui-spinner"></div>
       </div>
-      <video controls={false} className="lkui-video-element" ref={VideoElement} src={api.videoPath} autoPlay={true} onWaiting={handleBuffering} onPlaying={handlePlaying} onClick={() => {handleMouseMove(); handlePlayPause()}}></video>
+      <video 
+        controls={false} 
+        className="lkui-video-element" 
+        ref={VideoElement} 
+        src={api.videoPath}
+        playsInline={true} 
+        autoPlay={true} 
+        onWaiting={handleBuffering} 
+        onPlaying={handlePlaying} 
+        onClick={() => {
+          handleMouseMove(); 
+          handlePlayPause()
+        }}
+      ></video>
     </div>
   );
 }
