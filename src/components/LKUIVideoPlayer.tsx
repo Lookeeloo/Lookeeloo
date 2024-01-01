@@ -115,6 +115,8 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
         }
         currentTimeRef.current! = currentTime
       });
+      videoCurrent.addEventListener('play', () => {setIsPaused(false)})
+      videoCurrent.addEventListener('pause', () => {setIsPaused(true)})
 
       return () => {
         if (videoCurrent) {
