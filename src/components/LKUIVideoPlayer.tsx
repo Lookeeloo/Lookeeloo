@@ -257,8 +257,8 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
       playerControls.style.display = 'flex';
       TitleOnFS.current!.style.display = 'none'
     } else {
-      Player.current?.requestFullscreen();
       playerControls.style.display = 'none';
+      Player.current?.requestFullscreen();
       handleMouseMove()
       Player.current?.classList.add('lkui-fullscreen');
     }
