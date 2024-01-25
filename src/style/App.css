@@ -4,7 +4,7 @@
   --lkui-tertiary-color: #3f3f3f;
   --lkui-light-color: #eaeaea;
   --lkui-theme-color: #ff0000;
-  --lkui-display-fonts: 'MarkPro', system-ui, sans-serif;
+  --lkui-display-fonts: 'Jotia', system-ui, sans-serif;
 }
 @keyframes rotate-left-held {
   0% {
@@ -194,7 +194,7 @@ body {
   border-radius: 20px;
 }
 .lkui-video-captions {
-  font-family: 'Cascadia Mono', 'Cascadia Code','Consolas', 'SF Mono', 'Menlo', 'DejaVu Sans Mono', 'Hack', 'Liberation Mono', monospace;
+  font-family: var(--lkui-display-fonts);
   z-index: 1000; /* Set a z-index higher than the controls */
   position: absolute;
   font-size: 18pt;
