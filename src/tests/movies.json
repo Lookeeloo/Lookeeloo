@@ -37,6 +37,12 @@
             "id": "93CSM8EDWC8XUD",
             "name": "DEADLINE (Optimized)",
             "url": "https://github.com/SerialDesignatorN/cdn/raw/main/deadline-combined.mp4"
+        },
+        {
+            "id": "ERJF9ER329RFNE",
+            "name": "BFDI:TPOT 9: Outbreak At Stake",
+            "url": "https://github.com/SerialDesignatorN/cdn/raw/main/tpot_e9_720p.mp4",
+            "subtitles": "https://raw.githubusercontent.com/SerialDesignatorN/cdn/main/tpot_e9_en.srt"
         }
     ]
 }

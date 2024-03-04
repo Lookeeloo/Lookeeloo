@@ -12,11 +12,18 @@ import './style/App.css';
 import Player from './pages/Player';
 
 const ConditionalStuff: React.FC<{}> = (): React.ReactElement | null => {
-  if (window.location.href.includes('lookeeloo-canary') || window.location.href.includes('localhost')) {
+  if (window.location.href.includes('lookeeloo-canary')) {
     document.title = 'Lookeeloo (Canary [BETA])'
     return (
       <div className='lkui-on-canary'>
         <p>Lookeeloo Canary Channel. Errors will be automatically alerted. Additional bugs may be reported to <Link to='mailto:zeanfender11@gmail.com'>zeanfender11@gmail.com</Link> or <Link to='mailto:arsyadyudhistira2@gmail.com'>arsyadyudhistira2@gmail.com</Link></p>
+      </div>
+    )
+  } else if (window.location.href.includes('localhost')) {
+    document.title = 'Lookeeloo (running at localhost)'
+    return (
+      <div className='lkui-on-canary'>
+        <p>Lookeeloo (running at <code>localhost</code>.) Check console for further messages</p>
       </div>
     )
   } else {
