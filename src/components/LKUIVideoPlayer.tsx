@@ -11,7 +11,9 @@ import {
   SkipForward1024Filled,
   ClosedCaptionOff24Filled,
   ClosedCaption24Filled,
+  Next24Filled
 } from '@fluentui/react-icons';
+import LKUIControlTextableButton from './LKUIControlTextableButton';
 
 interface VideoPlayerAPI {
   videoPath: string;
@@ -19,6 +21,8 @@ interface VideoPlayerAPI {
   videoName: string;
   width?: number;
   height?: number;
+  startIntro?: number;
+  endIntro?: number;
 }
 
 interface Subtitle {
@@ -32,7 +36,8 @@ let timeout: any;
 function LKUIVideoPlayer(api: VideoPlayerAPI) {
   const [isPaused, setIsPaused] = useState<boolean>(true);
   const [isMuted, setIsMuted] = useState<boolean>(false);
-  const [captionsIsHidden, setCaptionsVisibility] = useState<boolean>(false)
+  const [showSkipButton, setShowSkipButton] = useState(false);
+  const [captionsIsHidden, setCaptionsVisibility] = useState<boolean>(false);
   const [seekValue, setSeekValue] = useState<number>(0);
   const [showMetadata, setShowMetadata] = useState<boolean>(false);
   const [isRippleClicked, setRippleClicked] = useState<boolean>(false); // Add this line
@@ -49,7 +54,7 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
   const TitleOnFS = useRef<HTMLDivElement>(null);
   const PlayElement = isPaused ? Play24Filled : Pause24Filled;
   const SpeakerElement = isMuted ? SpeakerMute24Filled : Speaker224Filled;
-  const CaptionsElement = captionsIsHidden ? ClosedCaptionOff24Filled: ClosedCaption24Filled;
+  const CaptionsElement = captionsIsHidden ? ClosedCaptionOff24Filled : ClosedCaption24Filled;
 
   const handleBuffering = () => {
     Spinner.current!.style.display = 'flex';
@@ -58,6 +63,7 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
   const handlePlaying = () => {
     Spinner.current!.style.display = 'none';
   };
+
   const formatTime = (time: number): string => {
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
@@ -94,6 +100,7 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
         const duration = videoCurrent.duration;
         if (TimeDisplayElement.current) {
           TimeDisplayElement.current.innerText = `00:00 / ${formatTime(duration)}`;
+          ProgressBar.current!.value = 0;
         }
         setIsPaused(true);
       });
@@ -113,10 +120,14 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
         if (TimeDisplayElement.current) {
           TimeDisplayElement.current.innerText = `${formatTime(currentTime)} / ${formatTime(duration)}`;
         }
-        currentTimeRef.current! = currentTime
+        currentTimeRef.current! = currentTime;
       });
-      videoCurrent.addEventListener('play', () => {setIsPaused(false)})
-      videoCurrent.addEventListener('pause', () => {setIsPaused(true)})
+      videoCurrent.addEventListener('play', () => {
+        setIsPaused(false);
+      });
+      videoCurrent.addEventListener('pause', () => {
+        setIsPaused(true);
+      });
 
       return () => {
         if (videoCurrent) {
@@ -126,6 +137,28 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
       };
     }
   }, []);
+  useEffect(() => {
+    const videoCurrent = VideoElement.current;
+  
+    if (videoCurrent) {
+      const handleTimeUpdate = () => {
+        const currentTime = videoCurrent.currentTime;
+        const shouldShowSkipButton = currentTime > (api.startIntro || 0) && currentTime < (api.endIntro || Infinity);
+  
+        if (document.fullscreenElement) {
+          return;
+        } else {
+          setShowSkipButton(shouldShowSkipButton);
+        }
+      };
+  
+      videoCurrent.addEventListener('timeupdate', handleTimeUpdate);
+  
+      return () => {
+        videoCurrent.removeEventListener('timeupdate', handleTimeUpdate);
+      };
+    }
+  }, [api.startIntro, api.endIntro]);
 
   const parseSRT = (srtData: string): Subtitle[] => {
     const srtParser = new srtParser2();
@@ -174,17 +207,18 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
       };
     }
   }, [captions]);
+
   useEffect(() => {
     let metadataTimeout: NodeJS.Timeout;
 
     if (isPaused && currentTimeRef.current > 0) {
       metadataTimeout = setTimeout(() => {
         setShowMetadata(true);
-        ControlBar.current!.style.display = 'none'
+        ControlBar.current!.style.display = 'none';
       }, 5000);
     } else {
       setShowMetadata(false);
-      ControlBar.current!.style.display = 'flex'
+      ControlBar.current!.style.display = 'flex';
     }
 
     return () => {
@@ -215,27 +249,27 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
 
   function handlePlayPause() {
     const videoCurrent = VideoElement.current;
-  
+
     if (videoCurrent?.paused === false) {
       videoCurrent?.pause();
       setIsPaused(true);
+      console.log(videoCurrent?.currentTime);
     } else {
       // Add the 'clicked' class to initiate the ripple effect
       setRippleClicked(true);
-  
+
       videoCurrent?.play().then(() => {
         setIsPaused(false);
       }).catch((error) => {
         console.error('Error playing video:', error);
       });
-  
+
       // Remove the 'clicked' class after a short delay (adjust as needed)
       setTimeout(() => {
         setRippleClicked(false);
       }, 500);
     }
   }
-  
 
   function handleMute() {
     const videoCurrent = VideoElement.current;
@@ -255,11 +289,11 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
       document.exitFullscreen();
       Player.current?.classList.remove('lkui-fullscreen');
       playerControls.style.display = 'flex';
-      TitleOnFS.current!.style.display = 'none'
+      TitleOnFS.current!.style.display = 'none';
     } else {
       playerControls.style.display = 'none';
       Player.current?.requestFullscreen();
-      handleMouseMove()
+      handleMouseMove();
       Player.current?.classList.add('lkui-fullscreen');
     }
   }
@@ -270,40 +304,52 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
 
   function handleMouseMove() {
     const playerControls = ControlBar.current!;
-
+    const currentTime = VideoElement.current?.currentTime;
+  
     if (document.fullscreenElement) {
-      if (playerControls) {
-        VideoElement.current!.style.cursor = 'default'
-        playerControls.style.display = 'flex';
-        TitleOnFS.current!.style.display = 'block'
-        clearTimeout(timeout);
-        timeout = setTimeout(() => {
-          if (playerControls) {
-            VideoElement.current!.style.cursor = 'none'
-            playerControls.style.display = 'none';
-            TitleOnFS.current!.style.display = 'none'
-          }
-        }, 4000);
+      if (currentTime && currentTime >= (api.startIntro || 0) && currentTime <= (api.endIntro || Infinity)) {
+        // If in intro region and fullscreen, hide controls and keep them hidden
+        if (playerControls) {
+          VideoElement.current!.style.cursor = 'default';
+          playerControls.style.display = 'none';
+          TitleOnFS.current!.style.display = 'none';
+        }
+      } else {
+        // Otherwise, show controls and apply usual behavior
+        if (playerControls) {
+          VideoElement.current!.style.cursor = 'default';
+          playerControls.style.display = 'flex';
+          TitleOnFS.current!.style.display = 'block';
+          clearTimeout(timeout);
+          timeout = setTimeout(() => {
+            if (playerControls) {
+              VideoElement.current!.style.cursor = 'none';
+              playerControls.style.display = 'none';
+              TitleOnFS.current!.style.display = 'none';
+            }
+          }, 4000);
+        }
       }
     } else {
+      // Not in fullscreen mode, show controls and apply usual behavior
       if (playerControls) {
-        TitleOnFS.current!.style.display = 'none'
-        VideoElement.current!.style.cursor = 'default'
+        TitleOnFS.current!.style.display = 'none';
+        VideoElement.current!.style.cursor = 'default';
         playerControls.style.display = 'flex';
       }
       clearTimeout(timeout);
     }
   }
-
+  
   enum QuickSeekDirection {
     Back10,
     Forward10,
   }
   function DesktopOnlyStuff() {
-    if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-      return null
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+      return null;
     }
-  
+
     // Return something for the non-mobile case
     return (
       <>
@@ -336,10 +382,10 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
     if (CaptionsContainer.current) {
       if (captionsIsHidden === false) {
         CaptionsContainer.current.style.display = 'none';
-        setCaptionsVisibility(true)
+        setCaptionsVisibility(true);
       } else {
         CaptionsContainer.current.style.display = 'block';
-        setCaptionsVisibility(false)
+        setCaptionsVisibility(false);
       }
     }
   }
@@ -359,7 +405,7 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
       handleFullScreen();
     } else if (e.key === 'Escape') {
       // Also handle when Esc is pressed
-      e.preventDefault()
+      e.preventDefault();
       if (document.fullscreenElement) {
         const playerControls = ControlBar.current!;
         document.exitFullscreen();
@@ -367,7 +413,7 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
         playerControls.style.display = 'flex';
       }
     } else if (e.key === 'c') {
-      toggleCaptions()
+      toggleCaptions();
     }
   };
 
@@ -378,7 +424,62 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
         <h1>{api.videoName}</h1>
       </div>
     </div>
-  )
+  );
+
+  function HandleSkipIntro() {
+    const VideoElemen = VideoElement.current!
+    if (api.endIntro != null) {
+      VideoElemen.currentTime = api.endIntro
+    }
+  }
+  const IntroSkipperInternal = () => {
+    const [showSkipButton, setShowSkipButton] = useState(false);
+  
+    useEffect(() => {
+      const handleTimeUpdate = () => {
+        const isFullscreen = document.fullscreenElement !== null;
+        const currentTime = VideoElement.current?.currentTime || 0;
+        const isInIntroRegion = currentTime >= (api.startIntro || 0) && currentTime <= (api.endIntro || Infinity);
+        setShowSkipButton(isFullscreen && isInIntroRegion);
+      };
+  
+      VideoElement.current?.addEventListener('timeupdate', handleTimeUpdate);
+  
+      return () => {
+        VideoElement.current?.removeEventListener('timeupdate', handleTimeUpdate);
+      };
+    }, [api.startIntro, api.endIntro]);
+  
+    useEffect(() => {
+      console.log('showSkipButton:', showSkipButton);
+    }, [showSkipButton]);
+  
+    const handleSkipIntro = () => {
+      if (api.endIntro != null) {
+        VideoElement.current!.currentTime = api.endIntro;
+        setShowSkipButton(false); // Hide the skip button after skipping
+      }
+    };
+  
+    if (showSkipButton) {
+      console.log('conditions are met, showing now.')
+      return (
+        <div className='lkui-video-player-controls'>
+          <h2>{api.videoName}</h2>
+          <div className="lkui-video-player-controls-right" style={{marginRight: '40px'}}>
+            <LKUIControlTextableButton fluentIcon={<Next24Filled />} onClick={handleSkipIntro}>Skip Intro</LKUIControlTextableButton>
+          </div>
+        </div>
+      );
+    } else {
+      console.log('one of the conditions are not met')
+      console.log(showSkipButton)
+      console.log(document.fullscreenElement)
+      return null;
+    }
+  };
+  
+  
 
   return (
     <div className="lkui-video-player" ref={Player} style={{ width: api.width, height: api.height }} onMouseMove={handleMouseMove}>
@@ -388,9 +489,10 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
         </div>
         {metadataDisplay}
         <div className="lkui-video-captions" ref={CaptionsContainer}></div>
+        <IntroSkipperInternal />
         <div className="lkui-video-player-controls" ref={ControlBar}>
           <div className="lkui-video-player-seekbar">
-            <progress ref={ProgressBar} className="lkui-video-progress" max={100}></progress>
+            <progress ref={ProgressBar} className="lkui-video-progress" max={100} value={0}></progress>
             <input
               type="range"
               ref={SeekerElement}
@@ -420,6 +522,9 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
               </div>
             </div>
             <div className="lkui-video-player-controls-right">
+              {showSkipButton && (
+                <LKUITransparentButton regComponent={Next24Filled} className="lkui-skip-button" onClick={HandleSkipIntro} title="Skip Intro"></LKUITransparentButton>
+              )}
               <LKUITransparentButton className='lkui-captions-button' regComponent={CaptionsElement} onClick={toggleCaptions} title='Toggle captions (c)'></LKUITransparentButton>
               <LKUITransparentButton regComponent={FullScreenMaximize24Filled} onClick={handleFullScreen} title="Fullscreen (f)"></LKUITransparentButton>
             </div>
@@ -429,18 +534,18 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
       <div className="lkui-spinner-container" ref={Spinner}>
         <div className="lkui-spinner"></div>
       </div>
-      <video 
-        controls={false} 
-        className="lkui-video-element" 
-        ref={VideoElement} 
+      <video
+        controls={false}
+        className="lkui-video-element"
+        ref={VideoElement}
         src={api.videoPath}
-        playsInline={true} 
-        autoPlay={true} 
-        onWaiting={handleBuffering} 
-        onPlaying={handlePlaying} 
+        playsInline={true}
+        autoPlay={true}
+        onWaiting={handleBuffering}
+        onPlaying={handlePlaying}
         onClick={() => {
-          handleMouseMove(); 
-          handlePlayPause()
+          handleMouseMove();
+          handlePlayPause();
         }}
       ></video>
     </div>

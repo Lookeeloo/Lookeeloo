@@ -28,7 +28,7 @@ function Player() {
   }
 
   // Extract title, URL, and subtitles from the selected movie
-  const { name, url, subtitles } = selectedMovie;
+  const { name, url, subtitles, startIntro, endIntro } = selectedMovie;
   if (window.location.href.includes('lookeeloo-canary')) {
     document.title = `${name} - Lookeeloo (Canary [BETA])`
   } else if (window.location.href.includes('localhost')) {
@@ -39,7 +39,7 @@ function Player() {
 
   return (
     <div className="lkui-player-page">
-      <LKUIVideoPlayer videoPath={url} captionsPath={subtitles} videoName={name} height={550}></LKUIVideoPlayer>
+      <LKUIVideoPlayer videoPath={url} captionsPath={subtitles} videoName={name} height={550} startIntro={startIntro} endIntro={endIntro}></LKUIVideoPlayer>
       <h2>{name}</h2>
     </div>
   );
@@ -50,6 +50,8 @@ export default Player;
 interface Movie {
   id: string;
   name: string;
+  startIntro?: number;
+  endIntro?: number
   url: string;
   subtitles?: string;
 }

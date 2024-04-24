@@ -3,50 +3,61 @@
         {
             "id": "3489FRJF934TJF",
             "name": "The Amazing Digital Circus",
+            "previewImage": "https://i.ytimg.com/vi/HwAPLk_sQ3w/maxresdefault.jpg",
             "url": "https://github.com/zeankundev/cdn/raw/main/tadc-pilot-480p.mp4",
             "subtitles": "https://raw.githubusercontent.com/zeankundev/cdn/main/tadc-pilot-en.srt"
         },
         {
             "id": "734JSD94M9E3MC",
             "name": "Murder Drones - Episode 1 : PILOT - Sample Video (Subtitle demo)",
+            "previewImage": "https://i.ytimg.com/vi/mImFz8mkaHo/hq720.jpg?sqp=-oaymwEXCK4FEIIDSFryq4qpAwkIARUAAIhCGAE=&rs=AOn4CLAgDk-OfimaMYHbIKGc0LKKZTPvWA",
             "url": "https://github.com/zeankundev/cdn/raw/main/murder-drones-e1-pilot-480p.mp4",
             "subtitles": "https://raw.githubusercontent.com/zeankundev/cdn/main/murder-drones-e1-pilot-en.srt"
         },
         {
             "id": "K210EKDS93EMXM",
             "name": "Big Buck Bunny - Sample Video (Playback demo)",
+            "previewImage": "https://ddz4ak4pa3d19.cloudfront.net/cache/5e/e5/5ee50a089ff4e9d1593ad8b5278f2f48.jpg",
             "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
         },
         {
             "id": "B28DSKW0REMSX0",
             "name": "Sprite Fright - Sample Video (Scalable aspect ratio demo)",
+            "previewImage": "https://ddz4ak4pa3d19.cloudfront.net/cache/8d/ed/8ded94a514ca466ea5f819824fbe14ab.jpg",
             "url": "https://upload.wikimedia.org/wikipedia/commons/7/74/Sprite_Fright_-_Open_Movie_by_Blender_Studio.webm"
         },
         {
             "id": "WQSNQ8E32EMSX6",
             "name": "Pootis Engage: EXTREME - Sample Video (Styled subtitles demo)",
             "url": "https://github.com/zeankundev/cdn/raw/main/pootis-engage-extreme-720p.mp4",
+            "previewImage": "https://i.ytimg.com/vi/Jl6lee2wyPQ/maxresdefault.jpg",
             "subtitles": "https://raw.githubusercontent.com/zeankundev/cdn/main/pootis-engage-extreme-720p.srt"
         }, 
         {
             "id": "ASDA3043840384",
             "name": "Skibidi Toilet Compilation",
+            "previewImage": "https://awsimages.detik.net.id/visual/2023/11/17/skibidi-toilet-dok-imdb_169.png",
             "url": "https://github.com/zeankundev/cdn/raw/main/skibidi-toilet-480p.mp4"
         },
         {
             "id": "93CSM8EDWC8XUD",
             "name": "DEADLINE (Optimized)",
+            "previewImage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6stV1pildYQDxLj2u4BBxHoNA9vvmLMUxAOJyFBWpLQ&s",
             "url": "https://github.com/zeankundev/cdn/raw/main/deadline-combined.mp4"
         },
         {
             "id": "ERJF9ER329RFNE",
             "name": "BFDI:TPOT 9: Outbreak At Stake",
+            "startIntro": 323,
+            "endIntro": 343,
+            "previewImage": "https://i.ytimg.com/vi/Mv8EPmY3HNE/maxresdefault.jpg",
             "url": "https://github.com/zeankundev/cdn/raw/main/tpot_e9_720p.mp4",
             "subtitles": "https://raw.githubusercontent.com/zeankundev/cdn/main/tpot_e9_en.srt"
         },
         {
             "id": "ST4RB0Y15G8311",
             "name": "The Weeknd: Starboy (Music Video)",
+            "previewImage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6stV1pildYQDxLj2u4BBxHoNA9vvmLMUxAOJyFBWpLQ&s",
             "url": "https://suitedcoder.github.io/cdn/y2mate.com%20-%20The%20Weeknd%20%20Starboy%20ft%20Daft%20Punk%20Official%20Video_1080p.mp4"
         }
     ]

@@ -185,12 +185,17 @@ body {
   position: absolute;
   top: 0;
 }
-.lkui-video-progress::-webkit-progress-bar {
+.lkui-video-progress::-webkit-progress-bar,
+.lkui-video-progress::-moz-progress-bar {
   background-color: rgba(255, 255, 255, 0.3);
   border-radius: 20px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
 }
-.lkui-video-progress::-webkit-progress-value {
+.lkui-video-progress::-webkit-progress-value,
+.lkui-video-progress::-moz-progress-bar {
   background-color: var(--lkui-theme-color);
+  border: none;
   border-radius: 20px;
 }
 .lkui-video-captions {
@@ -208,81 +213,58 @@ body {
   transform: translateX(-50%);
  }
 
+/* General selector for input range */
 input[type=range] {
   -webkit-appearance: none;
   -moz-appearance: none;
+  appearance: none;
   height: 8.4px;
   background: transparent;
   cursor: pointer;
 }
 
+/* Remove focus outline */
 input[type=range]:focus {
   outline: none;
 }
 
-input[type=range]::-webkit-slider-runnable-track {
+/* Track selector for both webkit and moz */
+input[type=range]::-webkit-slider-runnable-track,
+input[type=range]::-moz-range-track {
   width: 100%;
   cursor: pointer;
   border-radius: 1.3px;
-  -webkit-appearance: none;
   transition: all 0.4s ease;
 }
 
-input[type=range]::-webkit-slider-thumb {
+/* Thumb selector for both webkit and moz */
+input[type=range]::-webkit-slider-thumb,
+input[type=range]::-moz-range-thumb {
   height: 16px;
   width: 16px;
   border-radius: 16px;
   background: var(--lkui-theme-color);
   cursor: pointer;
-  -webkit-appearance: none;
   margin-left: -1px;
 }
 
-input[type=range]:focus::-webkit-slider-runnable-track {
+/* Focus track selector for both webkit and moz */
+input[type=range]:focus::-webkit-slider-runnable-track,
+input[type=range]:focus::-moz-range-track {
   background: transparent;
 }
 
-input[type=range].volume {
-  height: 5px;
-  background-color: #fff;
-}
-
-input[type=range].volume::-webkit-slider-runnable-track {
+/* Volume class selectors for webkit and moz */
+input[type=range].volume::-webkit-slider-runnable-track,
+input[type=range].volume::-moz-range-track {
   background-color: transparent;
 }
 
-input[type=range].volume::-webkit-slider-thumb {
+input[type=range].volume::-webkit-slider-thumb,
+input[type=range].volume::-moz-range-thumb {
   margin-left: 0;
   height: 14px;
   width: 14px;
-  background: #fff;
-}
-
-input[type=range]::-moz-range-track {
-  width: 100%;
-  height: 8.4px;
-  cursor: pointer;
-  border: 1px solid transparent;
-  background: transparent;
-  border-radius: 1.3px;
-}
-
-input[type=range]::-moz-range-thumb {
-  height: 14px;
-  width: 14px;
-  border-radius: 50px;
-  border: 1px solid var(--lkui-theme-color);
-  background: var(--lkui-theme-color);
-  cursor: pointer;
-  margin-top: 5px;
-}
-
-input[type=range]:focus::-moz-range-track {
-  outline: none;
-}
-
-input[type=range].volume::-moz-range-thumb {
-  border: 1px solid #fff;
   background: #fff;
 }
 .lkui-video-player-seeker {
@@ -440,6 +422,46 @@ h2 {
   animation: from-up-to-bottom 0.5s ease;
   display: none;
   width: 100%;
+}
+.lkui-image-preview {
+  width: 300px;
+  height: auto;
+  border-radius: 20px;
+}
+.lkui-movies {
+  padding-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  word-wrap: break-word;
+}
+.lkui-movie-select {
+  text-decoration: none;
+  padding: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  border-radius: 20px;
+}
+.lkui-movie-select:hover {
+  background-color: var(--lkui-secondary-color);
+}
+.lkui-movie-select span {
+  display: block;
+  font-weight: 700;
+  font-size: 15pt;
+  color: var(--lkui-light-color);
+}
+.lkui-controls-textable-button {
+  display: flex;
+  background-color: var(--lkui-light-color);
+  padding: 10px;
+  user-select: none;
+  align-items: center;
+  color: var(--lkui-primary-color);
+  border-radius: 15px;
+}
+.lkui-controls-textable-button span {
+  margin-left: 10px;
+  font-weight: 700;
 }
 @keyframes s3{ 
   100%{transform: rotate(1turn)}

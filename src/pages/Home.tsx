@@ -6,6 +6,7 @@ import JSONTestData from "../tests/movies.json";
 interface Movie {
   id: string;
   name: string;
+  previewImage: string;
   url: string;
   subtitles?: string;
 }
@@ -26,13 +27,16 @@ function Home() {
   return (
     <div>
       <h1>Recommended for you</h1>
-      {movies.map((movie: Movie) => (
-        <Link to={`/player/${movie.id}`}>
-          <div className='lkui-movie-select-devchannel' key={movie.id}>
-            <h2>{movie.name}</h2>
-          </div>
-        </Link>
-      ))}
+      <div className='lkui-movies'>
+        {movies.map((movie: Movie) => (
+          <Link to={`/player/${movie.id}`} className='lkui-movie-select'>
+            <div key={movie.id}>
+              <img src={movie.previewImage} width={1280} height={720} className='lkui-image-preview'></img>
+              <span>{movie.name.slice(0, 25) + (movie.name.length > 25 ? '...' : '')}</span>
+            </div>
+          </Link>
+        ))}
+      </div>
     </div>
   );
 }
