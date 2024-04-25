@@ -50,6 +50,7 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
   const ControlBar = useRef<HTMLDivElement>(null);
   const Player = useRef<HTMLDivElement>(null);
   const Spinner = useRef<HTMLDivElement>(null);
+  const SkipButton = useRef<HTMLDivElement>(null);
   const SeekerElement = useRef<HTMLInputElement & { isSeeking?: boolean }>(null);
   const TitleOnFS = useRef<HTMLDivElement>(null);
   const PlayElement = isPaused ? Play24Filled : Pause24Filled;
@@ -98,6 +99,7 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
 
       videoCurrent.addEventListener('loadeddata', () => {
         const duration = videoCurrent.duration;
+        ControlBar.current!.style.display = 'flex'
         if (TimeDisplayElement.current) {
           TimeDisplayElement.current.innerText = `00:00 / ${formatTime(duration)}`;
           ProgressBar.current!.value = 0;
@@ -143,12 +145,11 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
     if (videoCurrent) {
       const handleTimeUpdate = () => {
         const currentTime = videoCurrent.currentTime;
+        const playerControls = ControlBar.current!
         const shouldShowSkipButton = currentTime > (api.startIntro || 0) && currentTime < (api.endIntro || Infinity);
-  
-        if (document.fullscreenElement) {
-          return;
-        } else {
-          setShowSkipButton(shouldShowSkipButton);
+        setShowSkipButton(shouldShowSkipButton);
+        if (currentTime == api.startIntro && document.fullscreenElement) {
+          handleMouseMove()
         }
       };
   
@@ -307,28 +308,19 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
     const currentTime = VideoElement.current?.currentTime;
   
     if (document.fullscreenElement) {
-      if (currentTime && currentTime >= (api.startIntro || 0) && currentTime <= (api.endIntro || Infinity)) {
-        // If in intro region and fullscreen, hide controls and keep them hidden
-        if (playerControls) {
-          VideoElement.current!.style.cursor = 'default';
-          playerControls.style.display = 'none';
-          TitleOnFS.current!.style.display = 'none';
-        }
-      } else {
-        // Otherwise, show controls and apply usual behavior
-        if (playerControls) {
-          VideoElement.current!.style.cursor = 'default';
-          playerControls.style.display = 'flex';
-          TitleOnFS.current!.style.display = 'block';
-          clearTimeout(timeout);
-          timeout = setTimeout(() => {
-            if (playerControls) {
-              VideoElement.current!.style.cursor = 'none';
-              playerControls.style.display = 'none';
-              TitleOnFS.current!.style.display = 'none';
-            }
-          }, 4000);
-        }
+      // Otherwise, show controls and apply usual behavior
+      if (playerControls) {
+        VideoElement.current!.style.cursor = 'default';
+        playerControls.style.display = 'flex';
+        TitleOnFS.current!.style.display = 'block';
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+          if (playerControls) {
+            VideoElement.current!.style.cursor = 'none';
+            playerControls.style.display = 'none';
+            TitleOnFS.current!.style.display = 'none';
+          }
+        }, 4000);
       }
     } else {
       // Not in fullscreen mode, show controls and apply usual behavior
@@ -432,55 +424,6 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
       VideoElemen.currentTime = api.endIntro
     }
   }
-  const IntroSkipperInternal = () => {
-    const [showSkipButton, setShowSkipButton] = useState(false);
-  
-    useEffect(() => {
-      const handleTimeUpdate = () => {
-        const isFullscreen = document.fullscreenElement !== null;
-        const currentTime = VideoElement.current?.currentTime || 0;
-        const isInIntroRegion = currentTime >= (api.startIntro || 0) && currentTime <= (api.endIntro || Infinity);
-        setShowSkipButton(isFullscreen && isInIntroRegion);
-      };
-  
-      VideoElement.current?.addEventListener('timeupdate', handleTimeUpdate);
-  
-      return () => {
-        VideoElement.current?.removeEventListener('timeupdate', handleTimeUpdate);
-      };
-    }, [api.startIntro, api.endIntro]);
-  
-    useEffect(() => {
-      console.log('showSkipButton:', showSkipButton);
-    }, [showSkipButton]);
-  
-    const handleSkipIntro = () => {
-      if (api.endIntro != null) {
-        VideoElement.current!.currentTime = api.endIntro;
-        setShowSkipButton(false); // Hide the skip button after skipping
-      }
-    };
-  
-    if (showSkipButton) {
-      console.log('conditions are met, showing now.')
-      return (
-        <div className='lkui-video-player-controls'>
-          <h2>{api.videoName}</h2>
-          <div className="lkui-video-player-controls-right" style={{marginRight: '40px'}}>
-            <LKUIControlTextableButton fluentIcon={<Next24Filled />} onClick={handleSkipIntro}>Skip Intro</LKUIControlTextableButton>
-          </div>
-        </div>
-      );
-    } else {
-      console.log('one of the conditions are not met')
-      console.log(showSkipButton)
-      console.log(document.fullscreenElement)
-      return null;
-    }
-  };
-  
-  
-
   return (
     <div className="lkui-video-player" ref={Player} style={{ width: api.width, height: api.height }} onMouseMove={handleMouseMove}>
       <div className="lkui-video-player-containers">
@@ -489,7 +432,6 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
         </div>
         {metadataDisplay}
         <div className="lkui-video-captions" ref={CaptionsContainer}></div>
-        <IntroSkipperInternal />
         <div className="lkui-video-player-controls" ref={ControlBar}>
           <div className="lkui-video-player-seekbar">
             <progress ref={ProgressBar} className="lkui-video-progress" max={100} value={0}></progress>
@@ -522,9 +464,7 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
               </div>
             </div>
             <div className="lkui-video-player-controls-right">
-              {showSkipButton && (
-                <LKUITransparentButton regComponent={Next24Filled} className="lkui-skip-button" onClick={HandleSkipIntro} title="Skip Intro"></LKUITransparentButton>
-              )}
+            <LKUITransparentButton regComponent={Next24Filled} className="lkui-skip-button" onClick={HandleSkipIntro} title="Skip Intro" style={{ display: showSkipButton ? 'inline-block' : 'none' }}></LKUITransparentButton>
               <LKUITransparentButton className='lkui-captions-button' regComponent={CaptionsElement} onClick={toggleCaptions} title='Toggle captions (c)'></LKUITransparentButton>
               <LKUITransparentButton regComponent={FullScreenMaximize24Filled} onClick={handleFullScreen} title="Fullscreen (f)"></LKUITransparentButton>
             </div>

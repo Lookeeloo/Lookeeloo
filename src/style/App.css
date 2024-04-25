@@ -140,7 +140,7 @@ body {
 }
 
 .lkui-video-player-controls {
-  display: flex;
+  display: none;
   flex-direction: row;
   border-bottom-left-radius: 14px;
   border-bottom-right-radius: 14px;
