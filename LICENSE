@@ -1,7 +1,7 @@
-UFO (Unified Free and Open) License. (c) 2024 Lookeeloo Ltd.
+UFOL (Unified, Free and Open License) 2.0. (c) 2024 Lookeeloo Ltd. (10/6/2024)
 
 Preamble:
-The Unified Free and Open (UFO) license is a comprehensive legal instrument governing to use, modification, and distribution of software. The primary aim is to facilitate an open and collaborative environment, ensuring the rights and responsibilities of all parties involved. By using, modifying, or distributing software under this license, you agree to abide by its terms and conditions.
+The Unified Free and Open (UFOL) license is a comprehensive legal instrument governing to use, modification, and distribution of software. The primary aim is to facilitate an open and collaborative environment, ensuring the rights and responsibilities of all parties involved. By using, modifying, or distributing software under this license, you agree to abide by its terms and conditions.
 
 Definitions:
 Software: Refers to the computer program or programs covered by this license.
@@ -19,6 +19,10 @@ Any distribution of the software must include:
 The original copyright notice.
 A copy of this license.
 Clear documentation of any modifications made.
+
+Distribution Terms:
+
+The owner, or any high form of the legal body preserves the right to control the distribution flow or the Software, which means that a Distribution which may be violating the License, the owner is pleased to send a cease and desist or pursuing into legal action.
 
 Derivative Works Obligation:
 
@@ -52,11 +56,7 @@ Users are expressly prohibited from engaging in any activities that infringe upo
 
 Cease and Desist Authority:
 
-In the event of trademark infringement or activities that violate the terms of this license, the licensor reserves the right to issue a cease and desist notice. Users must promptly comply with such notices to rectify the infringement.
-
-Impersonation Accounts:
-
-Creating and maintaining accounts, websites, or other digital presences that falsely represent an association with the licensor or the software is strictly prohibited. Violators may be subject to legal action.
+In the event of trademark infringement or activities that violate the terms of this license, the licensor reserves the right, or be pleased, to issue a cease and desist notice. Users must promptly comply with such notices to rectify the infringement.
 
 Rights for Everyone to Obtain a Free Copy of the Code
 Access to Source Code:
@@ -74,4 +74,5 @@ The licensor shall not be liable for any trademark violations or disputes arisin
 
 Conclusion
 By using, modifying, or distributing the software covered by this license, you acknowledge and accept the terms and conditions outlined above. The UFO license is designed to establish a robust framework that promotes collaboration, innovation, and respect for intellectual property rights within the software development community.
+
 ---------END OF LICENSE---------
