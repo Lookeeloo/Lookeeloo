@@ -4,7 +4,7 @@
   --lkui-tertiary-color: #3f3f3f;
   --lkui-light-color: #eaeaea;
   --lkui-theme-color: #ff0000;
-  --lkui-display-fonts: 'Jotia', system-ui, sans-serif;
+  --lkui-display-fonts: 'Transport', system-ui, sans-serif;
 }
 @keyframes rotate-left-held {
   0% {

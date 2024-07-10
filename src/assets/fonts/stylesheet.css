@@ -1,0 +1,108 @@
+@font-face {
+    font-family: 'Transport';
+    src: url('Transport-Black.woff2') format('woff2'),
+        url('Transport-Black.woff') format('woff');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Transport';
+    src: url('Transport-BlackItalic.woff2') format('woff2'),
+        url('Transport-BlackItalic.woff') format('woff');
+    font-weight: 900;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Transport';
+    src: url('Transport-Bold.woff2') format('woff2'),
+        url('Transport-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Transport';
+    src: url('Transport-Light.woff2') format('woff2'),
+        url('Transport-Light.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Transport';
+    src: url('Transport-BoldItalic.woff2') format('woff2'),
+        url('Transport-BoldItalic.woff') format('woff');
+    font-weight: bold;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Transport';
+    src: url('Transport-LightItalic.woff2') format('woff2'),
+        url('Transport-LightItalic.woff') format('woff');
+    font-weight: 300;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Transport';
+    src: url('Transport-RegularItalic.woff2') format('woff2'),
+        url('Transport-RegularItalic.woff') format('woff');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Transport';
+    src: url('Transport-MediumItalic.woff2') format('woff2'),
+        url('Transport-MediumItalic.woff') format('woff');
+    font-weight: 500;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Transport';
+    src: url('Transport-Regular.woff2') format('woff2'),
+        url('Transport-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Transport';
+    src: url('Transport-Medium.woff2') format('woff2'),
+        url('Transport-Medium.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Transport';
+    src: url('Transport-Semibold.woff2') format('woff2'),
+        url('Transport-Semibold.woff') format('woff');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Transport';
+    src: url('Transport-SemiboldItalic.woff2') format('woff2'),
+        url('Transport-SemiboldItalic.woff') format('woff');
+    font-weight: 600;
+    font-style: italic;
+    font-display: swap;
+}
+
