@@ -192,8 +192,7 @@ body {
   -webkit-appearance: none;
   -moz-appearance: none;
 }
-.lkui-video-progress::-webkit-progress-value,
-.lkui-video-progress::-moz-progress-bar {
+.lkui-video-progress::-webkit-progress-value {
   background-color: var(--lkui-theme-color);
   border: none;
   border-radius: 20px;
@@ -213,58 +212,81 @@ body {
   transform: translateX(-50%);
  }
 
-/* General selector for input range */
-input[type=range] {
+ input[type=range] {
   -webkit-appearance: none;
   -moz-appearance: none;
-  appearance: none;
   height: 8.4px;
   background: transparent;
   cursor: pointer;
 }
 
-/* Remove focus outline */
 input[type=range]:focus {
   outline: none;
 }
 
-/* Track selector for both webkit and moz */
-input[type=range]::-webkit-slider-runnable-track,
-input[type=range]::-moz-range-track {
+input[type=range]::-webkit-slider-runnable-track {
   width: 100%;
   cursor: pointer;
   border-radius: 1.3px;
+  -webkit-appearance: none;
   transition: all 0.4s ease;
 }
 
-/* Thumb selector for both webkit and moz */
-input[type=range]::-webkit-slider-thumb,
-input[type=range]::-moz-range-thumb {
+input[type=range]::-webkit-slider-thumb {
   height: 16px;
   width: 16px;
   border-radius: 16px;
   background: var(--lkui-theme-color);
   cursor: pointer;
+  -webkit-appearance: none;
   margin-left: -1px;
 }
 
-/* Focus track selector for both webkit and moz */
-input[type=range]:focus::-webkit-slider-runnable-track,
-input[type=range]:focus::-moz-range-track {
+input[type=range]:focus::-webkit-slider-runnable-track {
   background: transparent;
 }
 
-/* Volume class selectors for webkit and moz */
-input[type=range].volume::-webkit-slider-runnable-track,
-input[type=range].volume::-moz-range-track {
+input[type=range].volume {
+  height: 5px;
+  background-color: #fff;
+}
+
+input[type=range].volume::-webkit-slider-runnable-track {
   background-color: transparent;
 }
 
-input[type=range].volume::-webkit-slider-thumb,
-input[type=range].volume::-moz-range-thumb {
+input[type=range].volume::-webkit-slider-thumb {
   margin-left: 0;
   height: 14px;
   width: 14px;
+  background: #fff;
+}
+
+input[type=range]::-moz-range-track {
+  width: 100%;
+  height: 8.4px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  background: transparent;
+  border-radius: 1.3px;
+}
+
+input[type=range]::-moz-range-thumb {
+  height: 14px;
+  width: 14px;
+  border-radius: 50px;
+  border: 1px solid var(--lkui-theme-color);
+  background: var(--lkui-theme-color);
+  cursor: pointer;
+  margin-top: 5px;
+}
+
+input[type=range]:focus::-moz-range-track {
+  outline: none;
+}
+
+input[type=range].volume::-moz-range-thumb {
+  border: 1px solid #fff;
   background: #fff;
 }
 .lkui-video-player-seeker {

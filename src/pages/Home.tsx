@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import logo from '../logo.svg';
-import JSONTestData from "../tests/movies.json";
-
 interface Movie {
   id: string;
   name: string;
@@ -16,7 +14,12 @@ function Home() {
 
   useEffect(() => {
     // Set movies data directly from the imported JSON file
-    setMoviesData(JSONTestData);
+    fetch('https://raw.githubusercontent.com/zeankundev/cdn/main/ota-update.json')
+    .then(res => res.json())
+    .then(data => {
+      setMoviesData(data);
+    })
+    
   }, []);
   if (!moviesData) {
     // Data not loaded yet

@@ -36,7 +36,6 @@ let timeout: any;
 function LKUIVideoPlayer(api: VideoPlayerAPI) {
   const [isPaused, setIsPaused] = useState<boolean>(true);
   const [isMuted, setIsMuted] = useState<boolean>(false);
-  const [showSkipButton, setShowSkipButton] = useState(false);
   const [captionsIsHidden, setCaptionsVisibility] = useState<boolean>(false);
   const [seekValue, setSeekValue] = useState<number>(0);
   const [showMetadata, setShowMetadata] = useState<boolean>(false);
@@ -56,7 +55,6 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
   const PlayElement = isPaused ? Play24Filled : Pause24Filled;
   const SpeakerElement = isMuted ? SpeakerMute24Filled : Speaker224Filled;
   const CaptionsElement = captionsIsHidden ? ClosedCaptionOff24Filled : ClosedCaption24Filled;
-
   const handleBuffering = () => {
     Spinner.current!.style.display = 'flex';
   };
@@ -146,8 +144,6 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
       const handleTimeUpdate = () => {
         const currentTime = videoCurrent.currentTime;
         const playerControls = ControlBar.current!
-        const shouldShowSkipButton = currentTime > (api.startIntro || 0) && currentTime < (api.endIntro || Infinity);
-        setShowSkipButton(shouldShowSkipButton);
         if (currentTime == api.startIntro && document.fullscreenElement) {
           handleMouseMove()
         }
@@ -464,7 +460,6 @@ function LKUIVideoPlayer(api: VideoPlayerAPI) {
               </div>
             </div>
             <div className="lkui-video-player-controls-right">
-            <LKUITransparentButton regComponent={Next24Filled} className="lkui-skip-button" onClick={HandleSkipIntro} title="Skip Intro" style={{ display: showSkipButton ? 'inline-block' : 'none' }}></LKUITransparentButton>
               <LKUITransparentButton className='lkui-captions-button' regComponent={CaptionsElement} onClick={toggleCaptions} title='Toggle captions (c)'></LKUITransparentButton>
               <LKUITransparentButton regComponent={FullScreenMaximize24Filled} onClick={handleFullScreen} title="Fullscreen (f)"></LKUITransparentButton>
             </div>
